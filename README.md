@@ -2,7 +2,7 @@ Please yell at me if you find any bugs or unintended behaviour
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-The program generates a config file, but ask Derpy or anyone you know currently using it for an already filled config.json
+The program generates a config file, but ask me or anyone you know currently using it for an already filled config.json
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
