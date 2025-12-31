@@ -12,8 +12,8 @@ The program generates a config file, but ask me or anyone you know currently usi
 
 Then find the two sheets and set the file type to csv. It will show you the generated direct-download links to each of these files
 
-<img width="525" height="249" alt="image" src="https://github.com/user-attachments/assets/f553dcf0-cd61-429a-af40-b9a4993576a0" />
-<img width="531" height="253" alt="image" src="https://github.com/user-attachments/assets/d7707cd1-a15e-43b3-9040-19bb7d325d6c" />
+<img width="525" height="249" alt="image" src="https://github.com/user-attachments/assets/e2750e1e-2da8-43f0-96c1-5c648bfc41b5" />
+<img width="531" height="253" alt="image" src="https://github.com/user-attachments/assets/99a137fb-4aab-47e1-9f36-11b58a1686d1" />
 
 Take those links and insert them in between the "" in the generated config.json after starting the BossTracker for the first time
 
