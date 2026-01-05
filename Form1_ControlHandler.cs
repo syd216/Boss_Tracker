@@ -175,7 +175,7 @@ namespace Boss_Tracker
         }
 
         // boss panels
-        public Panel CreateBossPanel(string bossName, string players, string classes, string partyType, string partyID, string cleared)
+        public Panel CreateBossPanel(string bossName, string players, string jobs, string partyType, string partyID, string cleared)
         {
             Panel panel = new Panel
             {
@@ -191,6 +191,10 @@ namespace Boss_Tracker
             string[] keywords = { "Easy", "Normal", "Hard", "Chaos", "Extreme" };
 
             string? foundKeyword = keywords.FirstOrDefault(k => boss.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
+
+            // split the string of players & jobs that is retrieved from the CSV
+            string[] splitPlayers = players.Split(" ");
+            string[] splitJobs = jobs.Split(" ");
 
             if (foundKeyword != null)
             {
@@ -212,9 +216,10 @@ namespace Boss_Tracker
             Label bossLabel = new Label
             {
                 Name = "bossLabel",
-                Text = boss + " (" + difficulty + ")" + " | " + partyType,
-                Width = 300,
-                Height = 25,
+                Text = $"{boss} ({difficulty}) | {partyType} | [{players.Split().Length - 1}]",
+                Width = 300, // set width dependant on if player count over 3
+                Height = 25, 
+                TextAlign = ContentAlignment.MiddleLeft,
                 BackColor = labelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
@@ -222,6 +227,32 @@ namespace Boss_Tracker
                 Font = fontStyleBold
             };
 
+            Label partyIDLabel = new Label
+            {
+                Name = "partyIDLabel",
+                Text = partyID,
+                Width = 300,
+                Height = 25,
+                BackColor = labelColor,
+                TextAlign = ContentAlignment.MiddleLeft,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(5),
+                Location = new Point(67, 75),
+                Font = fontStyle
+            };
+
+            // if the amount of players is over 3 (-1 for white space inclusion), extend the width of the boss label
+            // by a 1/3rd of the size against a multiplier (since each player label is 1/3rd the size of the boss label)
+            if (splitPlayers.Length - 1 > 3)
+            {
+                int widthMultiplier = (splitPlayers.Length - 1) - 3;
+                bossLabel.Width += (bossLabel.Width / 3) * widthMultiplier;
+                partyIDLabel.Width = bossLabel.Width; // also a long label that matches the boss label width
+            }
+
+            // needs to be converted to an array or list later to properly hold player values *********************
+            // instead of using a label as a container for variables                          *********************
+            // this and jobsLabel will be hidden as they are more code-functional rather than visual
             Label playersLabel = new Label
             {
                 Name = "playersLabel",
@@ -232,34 +263,107 @@ namespace Boss_Tracker
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
                 Location = new Point(67, 25),
-                Font = fontStyle
+                Font = fontStyle,
+                Visible = false
             };
 
             Label jobsLabel = new Label
             {
                 Name = "jobsLabel",
-                Text = classes,
+                Text = jobs,
                 Width = 300,
                 Height = 25,
                 BackColor = labelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
                 Location = new Point(67, 50),
-                Font = fontStyle
+                Font = fontStyle,
+                Visible = false
             };
 
-            Label partyIDLabel = new Label
+            // FOR LOOPS FOR MAKING THE VISUAL LABELS----------------------------------------------------------------
+            for (int i = 0; i < splitPlayers.Length - 1; i++) // need to -1 the length because the tail end is empty data: " "
             {
-                Name = "partyIDLabel",
-                Text = partyID,
-                Width = 300,
-                Height = 25,
-                BackColor = labelColor,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(5),
-                Location = new Point(67, 75),
-                Font = fontStyle
-            };
+                // create purely visual labels based off the player names
+                // using i, the index, as the offset for the name & how spaced each element should be
+                Label visualPlayerLabel = new Label
+                { 
+                    Name = $"visualPlayerLabel{i}", 
+                    Text = splitPlayers[i],
+                    Width = 100,
+                    Height = 25,
+                    BackColor = labelColor,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Margin = new Padding(5),
+                    Location = new Point(67 + (100 * i), 25), 
+                };
+
+                if (splitPlayers.Length - 1 < 3) // less than 3 players
+                {
+                    visualPlayerLabel.Width = bossLabel.Width / 2; ;
+                    visualPlayerLabel.Location = new Point(67 + (bossLabel.Width / 2 * i), 25);
+                }
+
+                panel.Controls.Add(visualPlayerLabel); 
+            }
+            
+            for (int i = 0; i < splitJobs.Length - 1; i++)
+            {
+                Label visualJobsLabel = new Label
+                {
+                    Name = $"visualJobLabel{i}",
+                    Text = splitJobs[i],
+                    Width = 100,
+                    Height = 25,
+                    BackColor = labelColor,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Margin = new Padding(5),
+                    Location = new Point(67 + (100 * i), 50),
+                };
+
+                if (splitPlayers.Length - 1 < 3) // less than 3 players
+                {
+                    visualJobsLabel.Width = bossLabel.Width / 2;
+                    visualJobsLabel.Location = new Point(67 + (bossLabel.Width / 2 * i), 50);
+                }
+
+                panel.Controls.Add(visualJobsLabel);
+            }
+
+            // special case for solos
+            if (splitPlayers.Length == 1 && splitJobs.Length == 1)
+            {
+                Label visualPlayerLabel = new Label
+                {
+                    Name = $"visualPlayerLabel",
+                    Text = players,
+                    Width = bossLabel.Width,
+                    Height = 25,
+                    BackColor = labelColor,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Margin = new Padding(5),
+                    Location = new Point(67, 25),
+                };
+
+                Label visualJobsLabel = new Label
+                {
+                    Name = $"visualJobLabel",
+                    Text = jobs,
+                    Width = bossLabel.Width,
+                    Height = 25,
+                    BackColor = labelColor,
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    BorderStyle = BorderStyle.FixedSingle,
+                    Margin = new Padding(5),
+                    Location = new Point(67, 50),
+                };
+
+                panel.Controls.Add(visualPlayerLabel);
+                panel.Controls.Add(visualJobsLabel);
+            }
 
             Button clearButton = new Button
             {
@@ -286,9 +390,9 @@ namespace Boss_Tracker
 
             panel.Controls.Add(bossPictureBox);
             panel.Controls.Add(bossLabel);
+            panel.Controls.Add(partyIDLabel);
             panel.Controls.Add(playersLabel);
             panel.Controls.Add(jobsLabel);
-            panel.Controls.Add(partyIDLabel);
             panel.Controls.Add(clearButton);
 
             return panel;
