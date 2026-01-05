@@ -1,8 +1,6 @@
 using Boss_Tracker.CS_Filter;
 using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
-using System.Threading.Tasks;
-using static System.Windows.Forms.Design.AxImporter;
 
 namespace Boss_Tracker
 {
@@ -79,7 +77,7 @@ namespace Boss_Tracker
 
             // set value to first partyID to begin comparing to the next partyID
             string currentPartyID = csvData[0][1];
-            string players = "", classes = "";
+            string players = "", jobs = "";
 
             // fill combobox
             filterbossComboBox.Items.Add(""); // blank option
@@ -94,7 +92,7 @@ namespace Boss_Tracker
             for (int i = 0; i < csvData.Count; i++)
             {
                 players += csvData[i][4] + " ";
-                classes += csvData[i][5] + " ";
+                jobs += csvData[i][5] + " ";
 
                 // check if the next element would be out-of-bounds
                 if (i + 1 < csvData.Count)
@@ -102,18 +100,18 @@ namespace Boss_Tracker
                     // begin checking if the next element is a different partyID
                     if (currentPartyID != csvData[i + 1][1])
                     {
-                        AddBossPanel(csvData[i][0], players, classes, csvData[i][2], csvData[i][1], csvData[i][7]);
+                        AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
                         players = "";
-                        classes = "";
+                        jobs = "";
 
                         currentPartyID = csvData[i + 1][1];
                     }
                 }
                 else // if the next element is out-of-bounds, finish up and add the final boss panel with the remaining collected data
                 {
-                    AddBossPanel(csvData[i][0], players, classes, csvData[i][2], csvData[i][1], csvData[i][7]);
+                    AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
                     players = "";
-                    classes = "";
+                    jobs = "";
                 }
             }
 
@@ -194,6 +192,7 @@ namespace Boss_Tracker
             // reset the state of check boxes, activePlayers list, and buttons
             soloCheckBox.Checked = false;
             excludeSoloCheckBox.Checked = false;
+            ExcludeClearsButton.Checked = false;
 
             activePlayers.Clear();
             excludedPlayers.Clear();

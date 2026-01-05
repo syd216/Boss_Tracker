@@ -13,7 +13,7 @@ namespace Boss_Tracker
         static readonly string charactersName = "Characters.csv";
         static readonly string configName = "config.json";
 
-        //
+        // key value names
         static readonly string configBTTKey = "bossTradeTrackerPath";
         static readonly string configCharactersKey = "charactersPath";
 
