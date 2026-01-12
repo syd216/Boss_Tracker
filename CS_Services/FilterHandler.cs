@@ -1,8 +1,9 @@
-﻿using Boss_Tracker.CS_Utility;
+﻿using Boss_Tracker.CS_States;
+using Boss_Tracker.CS_Utility;
 
 // fix exclude list (ex: exlcuding NL but including all of zak's jobs and blaster shows nothing)
 
-namespace Boss_Tracker.CS_Filter
+namespace Boss_Tracker.CS_Services
 {
     public class FilterHandler
     {

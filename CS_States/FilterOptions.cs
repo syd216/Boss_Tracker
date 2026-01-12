@@ -1,4 +1,4 @@
-﻿namespace Boss_Tracker.CS_Filter
+﻿namespace Boss_Tracker.CS_States
 {
     public class FilterOptions
     {

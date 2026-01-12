@@ -1,7 +1,7 @@
 ﻿using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
 
-namespace Boss_Tracker
+namespace Boss_Tracker.CS_ControlHandlers
 {
     public class Form1_ControlHandler
     {
@@ -180,7 +180,7 @@ namespace Boss_Tracker
             Panel panel = new Panel
             {
                 Width = 730,
-                Height = 110,
+                Height = 102,
                 BackColor = panelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5)

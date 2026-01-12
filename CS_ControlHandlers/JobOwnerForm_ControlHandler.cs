@@ -1,7 +1,7 @@
-﻿using Boss_Tracker.CS_Filter;
+﻿using Boss_Tracker.CS_States;
 using System.Runtime.InteropServices;
 
-namespace Boss_Tracker
+namespace Boss_Tracker.CS_ControlHandlers
 {
     internal class JobOwnerForm_ControlHandler
     {

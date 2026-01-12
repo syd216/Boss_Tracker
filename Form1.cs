@@ -1,5 +1,6 @@
-using Boss_Tracker.CS_Filter;
-using Boss_Tracker.CS_Utility;
+using Boss_Tracker.CS_ControlHandlers;
+using Boss_Tracker.CS_Services;
+using Boss_Tracker.CS_States;
 using Boss_Tracker.Properties;
 
 namespace Boss_Tracker
@@ -24,7 +25,6 @@ namespace Boss_Tracker
         public Dictionary<string, List<string>> jobOwnersExcluded = new Dictionary<string, List<string>>();
 
         // other classes
-        FilterOptions? _filterOptions;
         JobOwnerForm? _jobOwnerForm; // need to have the form saved to memory in order to make sure only one instance exists
 
         private readonly Form1_ControlHandler _controlHandler;
@@ -32,6 +32,12 @@ namespace Boss_Tracker
         private readonly CSVLoader _csvLoader;
         private readonly CSVDownloader _csvDownloader = new CSVDownloader();
         private readonly Dictionary<string, string> _configDict = new Dictionary<string, string>();
+
+        // refactoring job for state cs files 1/11/2026 | not finished yet, most variables above will be removed
+        private readonly FilterState _filterState;
+        private readonly UIState _uiState;
+        private readonly AppServices _appServices;
+        private FilterOptions _filterOptions;
 
         // instead of adding elements directly to the control, a flowpanel is used to avoid resizing issues
         FlowLayoutPanel flowPanel = new FlowLayoutPanel()

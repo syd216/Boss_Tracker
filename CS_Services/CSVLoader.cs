@@ -1,7 +1,6 @@
-﻿using Boss_Tracker.CS_Filter;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace Boss_Tracker.CS_Utility
+namespace Boss_Tracker.CS_Services
 {
     public class CSVLoader
     {
