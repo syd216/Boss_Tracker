@@ -1,17 +1,18 @@
-﻿using Boss_Tracker.CS_Utility;
+﻿using Boss_Tracker.CS_States;
+using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
 
-namespace Boss_Tracker
+namespace Boss_Tracker.CS_ControlHandlers
 {
     public class Form1_ControlHandler
     {
-        private readonly Form1 _mainForm;
+        private readonly FilterState _filterState;
         private readonly SaveToFile _saveToFile;
         private readonly string _filePathBTT = "";
 
-        public Form1_ControlHandler(Form1 mainForm, string filePathBTT) 
-        { 
-            _mainForm = mainForm; 
+        public Form1_ControlHandler(FilterState filterState, string filePathBTT) 
+        {
+            _filterState = filterState;
             _saveToFile = new SaveToFile(); 
             _filePathBTT = filePathBTT;
         }
@@ -49,8 +50,8 @@ namespace Boss_Tracker
 
         private void playertoggleButton_MouseDown(object? sender, MouseEventArgs e)
         {
-            List<string> activePlayers = _mainForm.activePlayers;
-            List<string> excludedPlayers = _mainForm.excludedPlayers;
+            List<string> activePlayers = _filterState.ActivePlayers;
+            List<string> excludedPlayers = _filterState.ExcludedPlayers;
 
             // check to make sure btn is not broken
             if (sender is not Button btn)
@@ -122,8 +123,8 @@ namespace Boss_Tracker
 
         private void jobtoggleButton_MouseDown(object? sender, MouseEventArgs e)
         {
-            List<string> activeJobs = _mainForm.activeJobs;
-            List<string> excludedJobs = _mainForm.excludedJobs;
+            List<string> activeJobs = _filterState.ActiveJobs;
+            List<string> excludedJobs = _filterState.ExcludedJobs;
 
             if (sender is not Button btn)
             {
@@ -180,7 +181,7 @@ namespace Boss_Tracker
             Panel panel = new Panel
             {
                 Width = 730,
-                Height = 110,
+                Height = 102,
                 BackColor = panelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5)

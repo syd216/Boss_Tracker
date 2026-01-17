@@ -1,8 +1,9 @@
-﻿using Boss_Tracker.CS_Utility;
+﻿using Boss_Tracker.CS_States;
+using Boss_Tracker.CS_Utility;
 
 // fix exclude list (ex: exlcuding NL but including all of zak's jobs and blaster shows nothing)
 
-namespace Boss_Tracker.CS_Filter
+namespace Boss_Tracker.CS_Services
 {
     public class FilterHandler
     {
@@ -16,12 +17,12 @@ namespace Boss_Tracker.CS_Filter
         string playersLBLText = "";
         string[] cleanedPlayerList = { "" };
 
-        public void ApplyFilter(List<Panel> sourcePanelList, List<Panel> filteredPanelList, FilterOptions options)
+        public void ApplyFilter(UIState uiState, UIFilterOptions uiFilterOptions, FilterState filterState)
         {
-            filteredPanelList.Clear(); // clear list on every new filter
-            string fbTBText = options.FilterBossTextBoxText;
+            uiState.filteredPanelList.Clear(); // clear list on every new filter
+            string fbTBText = uiFilterOptions.FilterBossTextBoxText;
 
-            foreach (Panel p in sourcePanelList)
+            foreach (Panel p in uiState.panelList)
             {
                 bool isValid = true;
                 bool cleared = false;
@@ -52,31 +53,31 @@ namespace Boss_Tracker.CS_Filter
                 }
 
                 // check if any variables from the advanced job owner filter are being used
-                if (options.JobOwnersActive.Count > 0 || options.JobOwnersExcluded.Count > 0)
+                if (filterState.JobOwnersActive.Count > 0 || filterState.JobOwnersExcluded.Count > 0)
                 {
-                    isValid = AdvancedJobOwnerFilter(options);
+                    isValid = AdvancedJobOwnerFilter(filterState);
                 }
                 else
                 {
                     // this applies to all filter types. Check if the job toggle list is active
-                    if (options.ActiveJobs.Count > 0)
+                    if (filterState.ActiveJobs.Count > 0)
                     {
                         // if so, bool LINQ. For each job in ActiveJobs, check if the lable contains that job
                         // using .Any(), even if one job is found while iterating, return true
-                        bool jobFound = options.ActiveJobs.Any(job => jobsLBLText.IndexOf(job) >= 0);
+                        bool jobFound = filterState.ActiveJobs.Any(job => jobsLBLText.IndexOf(job) >= 0);
 
                         if (!jobFound) { isValid = false; }
                     }
 
-                    if (options.ExcludedJobs.Count > 0)
+                    if (filterState.ExcludedJobs.Count > 0)
                     {
-                        bool excludedJobFound = options.ExcludedJobs.Any(job => jobsLBLText.IndexOf(job) >= 0);
+                        bool excludedJobFound = filterState.ExcludedJobs.Any(job => jobsLBLText.IndexOf(job) >= 0);
 
                         if (excludedJobFound) { isValid = false; }
                     }
                 }
 
-                if (options.ExcludeClearsButton.Checked)
+                if (uiFilterOptions.ExcludeClearsButton.Checked)
                 {
                     if (cleared) { isValid = false; }
                 }
@@ -88,14 +89,14 @@ namespace Boss_Tracker.CS_Filter
                 }
 
                 // to check if any of the players of the player list in the main panel should be excluded or not
-                if (options.ExcludedPlayers.Count > 0)
+                if (filterState.ExcludedPlayers.Count > 0)
                 {
-                    bool excludedPlayerFound = options.ExcludedPlayers.Any(player => playersLBLText.IndexOf(player) >= 0);
+                    bool excludedPlayerFound = filterState.ExcludedPlayers.Any(player => playersLBLText.IndexOf(player) >= 0);
 
                     if (excludedPlayerFound) { isValid = false; }
                 }
 
-                if (options.ExcludeSoloCheckBox.Checked)
+                if (uiFilterOptions.ExcludeSoloCheckBox.Checked)
                 {
                     if (cleanedPlayerList.Length <= 1) { isValid = false; }
                 }
@@ -105,66 +106,63 @@ namespace Boss_Tracker.CS_Filter
 
                 // the conditionals BELOW check for the correct boss in the panel and other factors such as the
                 // currently filtered players (ActivePlayers), correct amount of players, and group/solo play
-                if ((options.Mode == "Group" && !options.SoloCheckBox.Checked) && isValid) // filters for parties only
+                if ((uiFilterOptions.Mode == "Group" && !uiFilterOptions.SoloCheckBox.Checked) && isValid) // filters for parties only
                 {
                     // begin conditional checking for every case
-                    if (options.ActivePlayers.Count > 0) // are the player toggle buttons being used
+                    if (filterState.ActivePlayers.Count > 0) // are the player toggle buttons being used
                     {
-                        foreach (string name in options.ActivePlayers) // begin checking if any instance of a name from players text box exists
+                        foreach (string name in filterState.ActivePlayers) // begin checking if any instance of a name from players text box exists
                         {
                             if (!cleanedPlayerList.Contains(name)) { isValid = false; }
 
-                            if (cleanedPlayerList.Length < options.ActivePlayers.Count) { isValid = false; }
+                            if (cleanedPlayerList.Length < filterState.ActivePlayers.Count) { isValid = false; }
                         }
                     }
                 }
-                else if ((options.Mode == "Solo" || options.SoloCheckBox.Checked) && isValid)
+                else if ((uiFilterOptions.Mode == "Solo" || uiFilterOptions.SoloCheckBox.Checked) && isValid)
                 {
-                    options.ExcludeSoloCheckBox.Checked = false; // make sure exclude solo is unchecked
+                    uiFilterOptions.ExcludeSoloCheckBox.Checked = false; // make sure exclude solo is unchecked
 
                     if (bossLBLText.Contains("Solo"))
                     {
                         Console.WriteLine("HERE");
-                        if (bossLBLText.Contains(fbTBText) && options.ActivePlayers.Count > 0)
+                        if (bossLBLText.Contains(fbTBText) && filterState.ActivePlayers.Count > 0)
                         {
-                            if (!options.ActivePlayers.Contains(playersLBLText))
-                            {
-                                isValid = false;
-                            }
+                            if (!filterState.ActivePlayers.Contains(playersLBLText)) { isValid = false; }
                         }
                     }
                     else { isValid = false; }
                 }
 
-                if (isValid) { filteredPanelList.Add(p);  }
+                if (isValid) { uiState.filteredPanelList.Add(p);  }
             }
 
-            if (filteredPanelList.Count > 0)
+            if (uiState.filteredPanelList.Count > 0)
             {
-                foreach (Panel p in sourcePanelList)
+                foreach (Panel p in uiState.panelList)
                 {
                     p.Enabled = false;
                     p.Visible = false;
                 }
 
-                foreach (Panel p in filteredPanelList)
+                foreach (Panel p in uiState.filteredPanelList)
                 {
                     p.Enabled = true;
                     p.Visible = true;
                 }
 
                 // DEBUG LABEL HERE
-                options.ElementAmountLabel.Text = filteredPanelList.Count.ToString();
+                uiFilterOptions.ElementAmountLabel.Text = uiState.filteredPanelList.Count.ToString();
             }
             else { MessageBox.Show("No results found", "Notice"); }
         }
 
-        bool AdvancedJobOwnerFilter(FilterOptions options)
+        bool AdvancedJobOwnerFilter(FilterState filterState)
         {
-            if (options.JobOwnersActive.Count > 0)
+            if (filterState.JobOwnersActive.Count > 0)
             {
                 // DictionaryFormat<string, List<string>>
-                foreach (string player in options.JobOwnersActive.Keys)
+                foreach (string player in filterState.JobOwnersActive.Keys)
                 {
                     if (cleanedPlayerList.Contains(player))
                     {
@@ -172,9 +170,9 @@ namespace Boss_Tracker.CS_Filter
                         // they are also ordered by who plays the job 
                         for (int i = 0; i < cleanedPlayerList.Length; i++)
                         {
-                            foreach (string job in options.JobOwnersActive[player])
+                            foreach (string job in filterState.JobOwnersActive[player])
                             {
-                                bool jobFound = options.JobOwnersActive[player].Any(job => cleanedJobList[i].IndexOf(job) >= 0);
+                                bool jobFound = filterState.JobOwnersActive[player].Any(job => cleanedJobList[i].IndexOf(job) >= 0);
 
                                 if (player == cleanedPlayerList[i])
                                 {
@@ -198,18 +196,18 @@ namespace Boss_Tracker.CS_Filter
                 }
             }
 
-            if (options.JobOwnersExcluded.Count > 0)
+            if (filterState.JobOwnersExcluded.Count > 0)
             {
                 // DictionaryFormat<string, List<string>>
-                foreach (string player in options.JobOwnersExcluded.Keys)
+                foreach (string player in filterState.JobOwnersExcluded.Keys)
                 {
                     if (cleanedPlayerList.Contains(player))
                     {
                         for (int i = 0; i < cleanedPlayerList.Length; i++)
                         {
-                            foreach (string job in options.JobOwnersExcluded[player])
+                            foreach (string job in filterState.JobOwnersExcluded[player])
                             {
-                                bool jobFound = options.JobOwnersExcluded[player].Any(job => cleanedJobList[i].IndexOf(job) >= 0);
+                                bool jobFound = filterState.JobOwnersExcluded[player].Any(job => cleanedJobList[i].IndexOf(job) >= 0);
 
                                 if (player == cleanedPlayerList[i])
                                 {
