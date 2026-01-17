@@ -1,4 +1,5 @@
 ﻿using Boss_Tracker.CS_ControlHandlers;
+using Boss_Tracker.CS_States;
 
 namespace Boss_Tracker.CS_Services
 {
@@ -7,12 +8,12 @@ namespace Boss_Tracker.CS_Services
         public CSVLoader csvLoader { get; }
         public CSVDownloader csvDownloader { get; } = new();
         public FilterHandler filterHandler { get; } = new();
-        public Form1_ControlHandler form1_CotnrolHandler { get; }
+        public Form1_ControlHandler form1_ControlHandler { get; }
 
-        public AppServices(string bttPath, string charPath, Form1 form)
+        public AppServices(string bttPath, string charPath, FilterState filterState)
         {
             csvLoader = new CSVLoader(bttPath, charPath);
-            form1_CotnrolHandler = new Form1_ControlHandler(form, bttPath);
+            form1_ControlHandler = new Form1_ControlHandler(filterState, bttPath);
         }
     }
 }

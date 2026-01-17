@@ -9,7 +9,8 @@
         public List<string> ExcludedJobs { get; set; } = new();
 
         // for advanced job owner filter
-        public Dictionary<string, List<string>> jobOwnersActive { get; set; } = new();
-        public Dictionary<string, List<string>> jobOwnersExcluded { get; set; } = new();
+        public Dictionary<string, List<string>> JobOwnersActive { get; set; } = new();
+        public Dictionary<string, List<string>> JobOwnersExcluded { get; set; } = new();
+        public Dictionary<string, List<string>> JobOwnersDict { get; set; } = new();
     }
 }

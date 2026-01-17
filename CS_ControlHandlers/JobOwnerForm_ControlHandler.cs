@@ -1,5 +1,4 @@
 ﻿using Boss_Tracker.CS_States;
-using System.Runtime.InteropServices;
 
 namespace Boss_Tracker.CS_ControlHandlers
 {
@@ -14,10 +13,10 @@ namespace Boss_Tracker.CS_ControlHandlers
         Color btnColorGreen = Color.LightGreen;
         Color btnColorRed = Color.IndianRed;
 
-        public JobOwnerForm_ControlHandler(FilterOptions options) 
+        public JobOwnerForm_ControlHandler(FilterState filterState) 
         { 
-            _jobOwnersActive = options.JobOwnersActive;
-            _jobOwnersExcluded = options.JobOwnersExcluded;
+            _jobOwnersActive = filterState.JobOwnersActive;
+            _jobOwnersExcluded = filterState.JobOwnersExcluded;
 
             Console.WriteLine("---------------------------");
             foreach (string key in _jobOwnersActive.Keys)
