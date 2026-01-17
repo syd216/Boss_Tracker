@@ -27,8 +27,6 @@ namespace Boss_Tracker
                 if (c is Panel) { panels.Add((Panel)c); }
             }
 
-            MessageBox.Show(panels.Count.ToString());
-
             foreach (Panel p in panels)
             {
                 foreach (Control c in p.Controls)
