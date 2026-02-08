@@ -3,39 +3,16 @@ using Boss_Tracker.CS_States;
 using Boss_Tracker.Properties;
 using System.Diagnostics;
 
-namespace Boss_Tracker // 1/16/2026
+namespace Boss_Tracker
 {
     public partial class Form1 : Form
     {
-        // list of panels and important controls ** MOVED TO UIState.cs
-        //List<Panel> panelList = new List<Panel>();
-        //List<Panel> filteredPanelList = new List<Panel>();
-        //List<Button> playerToggleButtons = new List<Button>();
-        //List<Button> jobToggleButtons = new List<Button>();
-
-        // for simple job filter                 ** MOVED TO FilterState.cs
-        //public List<string> activePlayers = new List<string>();
-        //public List<string> activeJobs = new List<string>();
-        //public List<string> excludedPlayers = new List<string>();
-        //public List<string> excludedJobs = new List<string>();
-
-        // for advanced job owner filter         ** MOVED TO FilterState.cs
-        //Dictionary<string, List<string>> jobOwnersDict = new Dictionary<string, List<string>>();
-        //public Dictionary<string, List<string>> jobOwnersActive = new Dictionary<string, List<string>>();
-        //public Dictionary<string, List<string>> jobOwnersExcluded = new Dictionary<string, List<string>>();
-
         JobOwnerForm? _jobOwnerForm; // need to have the form saved to memory in order to make sure only one instance exists
 
         // dictionary for preserving data from the config file
         private readonly Dictionary<string, string> _configDict = new Dictionary<string, string>();
 
-        // other classes                         ** MOVED TO AppServices.cs
-        //private readonly Form1_ControlHandler _controlHandler;
-        //private readonly FilterHandler _filterHandler = new FilterHandler();
-        //private readonly CSVLoader _csvLoader;
-        //private readonly CSVDownloader _csvDownloader = new CSVDownloader();
-
-        // refactoring job for state cs files 1/11/2026
+        // classes for setters/getters
         private FilterState _filterState;
         private UIState _uiState;
         private AppServices _appServices;
@@ -85,7 +62,7 @@ namespace Boss_Tracker // 1/16/2026
 
             jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);
 
-            Controls.Add(flowPanel);
+            tabControl1.TabPages[0].Controls.Add(flowPanel); // add flow panel for the boss panels into tab panel
         }
 
         // boss[0], partyID[1], partyType[2], charID[3], owner[4], class[5], partySize[6], cleared[7], notes[8]

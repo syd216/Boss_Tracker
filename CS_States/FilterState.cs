@@ -2,7 +2,7 @@
 {
     public class FilterState
     {
-        // for simple job filter
+        // for simple job filter (not job owner form buttons)
         public List<string> ActivePlayers { get; set; } = new();
         public List<string> ActiveJobs { get; set; } = new();
         public List<string> ExcludedPlayers { get; set; } = new();
