@@ -9,15 +9,15 @@ namespace Boss_Tracker.CS_Services
     {
         StringUtils _stringUtils = new StringUtils();
 
-        string bossLBLText = "";
+        string boss_string = "";
 
-        string jobsLBLText = "";
+        string jobs_string = "";
         string[] cleanedJobList = { "" };
 
-        string playersLBLText = "";
+        string players_string = "";
         string[] cleanedPlayerList = { "" };
 
-        public void ApplyFilter(UIState uiState, UIFilterOptions uiFilterOptions, FilterState filterState)
+        public void ApplyFilter(UIState_BossPanel uiState, UIFilterOptions uiFilterOptions, FilterState filterState)
         {
             uiState.filteredPanelList.Clear(); // clear list on every new filter
             string fbTBText = uiFilterOptions.FilterBossTextBoxText;
@@ -27,30 +27,21 @@ namespace Boss_Tracker.CS_Services
                 bool isValid = true;
                 bool cleared = false;
 
-                foreach (Control c in p.Controls)
+                // retrieve values from helper file
+                if (p.Tag is BossPanelContext bpc)
                 {
-                    if (c is Label lbl) // retrieve current boss panel labels & text fields
-                    {
-                        // playerLBLText/jobLBLText has a ' ' character registered as an assumed player at the end of a label
-                        if (lbl.Name == "bossLabel") { bossLBLText = lbl.Text; }
-                        if (lbl.Name == "playersLabel") { playersLBLText = lbl.Text; cleanedPlayerList = _stringUtils.TrimStringArrayEnd(playersLBLText); }
-                        if (lbl.Name == "jobsLabel") { jobsLBLText = lbl.Text; cleanedJobList = _stringUtils.TrimStringArrayEnd(jobsLBLText); }
-                    }
-
-                    // check if boss is cleared or not. This is optionally used for the exclude clears checkbox
-                    if (c is Button btn)
-                    {
-                        if (btn.Name == "clearButton") 
-                        {
-                            Console.WriteLine(btn.Text);
-
-                            if (btn.Text == "Unclear")
-                            {
-                                cleared = true;
-                            }
-                        }
-                    }
+                    boss_string = bpc.BossName;
+                    players_string = bpc.BossPanelPlayers;
+                    jobs_string = bpc.BossPanelJobs;
+                    
+                    if (bpc.ClearButton.Text == "Unclear") { cleared = true; }
                 }
+
+                Console.WriteLine(players_string);
+
+                // trim string array end since there is a " " for every line retrieved from the csv file
+                cleanedPlayerList = _stringUtils.TrimStringArrayEnd(players_string);
+                cleanedJobList = _stringUtils.TrimStringArrayEnd(jobs_string);
 
                 // check if any variables from the advanced job owner filter are being used
                 if (filterState.JobOwnersActive.Count > 0 || filterState.JobOwnersExcluded.Count > 0)
@@ -64,14 +55,14 @@ namespace Boss_Tracker.CS_Services
                     {
                         // if so, bool LINQ. For each job in ActiveJobs, check if the lable contains that job
                         // using .Any(), even if one job is found while iterating, return true
-                        bool jobFound = filterState.ActiveJobs.Any(job => jobsLBLText.IndexOf(job) >= 0);
+                        bool jobFound = filterState.ActiveJobs.Any(job => jobs_string.IndexOf(job) >= 0);
 
                         if (!jobFound) { isValid = false; }
                     }
 
                     if (filterState.ExcludedJobs.Count > 0)
                     {
-                        bool excludedJobFound = filterState.ExcludedJobs.Any(job => jobsLBLText.IndexOf(job) >= 0);
+                        bool excludedJobFound = filterState.ExcludedJobs.Any(job => jobs_string.IndexOf(job) >= 0);
 
                         if (excludedJobFound) { isValid = false; }
                     }
@@ -82,7 +73,7 @@ namespace Boss_Tracker.CS_Services
                     if (cleared) { isValid = false; }
                 }
 
-                if (!bossLBLText.Contains(fbTBText))
+                if (!boss_string.Contains(fbTBText))
                 {
                     Console.WriteLine("YUP");
                     isValid = false;
@@ -91,7 +82,7 @@ namespace Boss_Tracker.CS_Services
                 // to check if any of the players of the player list in the main panel should be excluded or not
                 if (filterState.ExcludedPlayers.Count > 0)
                 {
-                    bool excludedPlayerFound = filterState.ExcludedPlayers.Any(player => playersLBLText.IndexOf(player) >= 0);
+                    bool excludedPlayerFound = filterState.ExcludedPlayers.Any(player => players_string.IndexOf(player) >= 0);
 
                     if (excludedPlayerFound) { isValid = false; }
                 }
@@ -123,12 +114,12 @@ namespace Boss_Tracker.CS_Services
                 {
                     uiFilterOptions.ExcludeSoloCheckBox.Checked = false; // make sure exclude solo is unchecked
 
-                    if (bossLBLText.Contains("Solo"))
+                    if (boss_string.Contains("Solo"))
                     {
                         Console.WriteLine("HERE");
-                        if (bossLBLText.Contains(fbTBText) && filterState.ActivePlayers.Count > 0)
+                        if (boss_string.Contains(fbTBText) && filterState.ActivePlayers.Count > 0)
                         {
-                            if (!filterState.ActivePlayers.Contains(playersLBLText)) { isValid = false; }
+                            if (!filterState.ActivePlayers.Contains(players_string)) { isValid = false; }
                         }
                     }
                     else { isValid = false; }
@@ -178,12 +169,12 @@ namespace Boss_Tracker.CS_Services
                                 {
                                     if (!jobFound)
                                     {
-                                        Console.WriteLine($"{bossLBLText} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would not be valid");
+                                        Console.WriteLine($"{boss_string} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would not be valid");
                                         return false;
                                     }
                                     else
                                     {
-                                        Console.WriteLine($"{bossLBLText} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would be valid");
+                                        Console.WriteLine($"{boss_string} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would be valid");
                                     }
                                 }
                             }
@@ -213,12 +204,12 @@ namespace Boss_Tracker.CS_Services
                                 {
                                     if (jobFound)
                                     {
-                                        Console.WriteLine($"{bossLBLText} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would not be valid");
+                                        Console.WriteLine($"{boss_string} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would not be valid");
                                         return false;
                                     }
                                     else
                                     {
-                                        Console.WriteLine($"{bossLBLText} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would be valid");
+                                        Console.WriteLine($"{boss_string} | {player} | cleaned: {cleanedPlayerList[i]} | job: {job} && {cleanedJobList[i]}: Would be valid");
                                     }
                                 }
                             }

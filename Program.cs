@@ -20,9 +20,9 @@ namespace Boss_Tracker
         static string configFile = "";
         static Dictionary<string, string>? configDict;
 
-        /*[DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();*/
+        static extern bool AllocConsole();
 
         /// <summary>
         ///  The main entry point for the application.
@@ -30,7 +30,7 @@ namespace Boss_Tracker
         [STAThread]
         static async Task Main()
         {
-            //AllocConsole();
+            AllocConsole();
 
             bool canRun = true;
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;

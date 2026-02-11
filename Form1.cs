@@ -1,3 +1,4 @@
+using Boss_Tracker.CS_ControlHandlers;
 using Boss_Tracker.CS_Services;
 using Boss_Tracker.CS_States;
 using Boss_Tracker.Properties;
@@ -14,12 +15,24 @@ namespace Boss_Tracker
 
         // classes for setters/getters
         private FilterState _filterState;
-        private UIState _uiState;
+        private UIState_BossPanel _uiState_BossPanel;
+        private UIState_BossCrystal _uiState_BossCrystal;
         private AppServices _appServices;
         private UIFilterOptions _uiFilterOptions;
+        private BossPartyFactory _bossPartyFactory;
+        private BossCrystalFactory _bossCrystalFactory;
 
         // instead of adding elements directly to the control, a flowpanel is used to avoid resizing issues
-        FlowLayoutPanel flowPanel = new FlowLayoutPanel()
+        FlowLayoutPanel flowPanelBossParties = new FlowLayoutPanel()
+        {
+            Dock = DockStyle.Fill,
+            AutoScroll = true,
+            FlowDirection = FlowDirection.TopDown,
+            WrapContents = false,
+            Padding = new Padding(5)
+        };
+
+        FlowLayoutPanel flowPanelBossCrystals = new FlowLayoutPanel()
         {
             Dock = DockStyle.Fill,
             AutoScroll = true,
@@ -32,12 +45,14 @@ namespace Boss_Tracker
         {
             InitializeComponent();
 
-            // refactor job [[
+            this.MaximizedBounds = Screen.FromControl(this).WorkingArea;
+
             // set CSVLoader and ControlHandler in constructor
             _configDict = configDict; // set from Program.cs
 
             _filterState = new FilterState();
-            _uiState = new UIState();
+            _uiState_BossPanel = new UIState_BossPanel();
+            _uiState_BossCrystal = new UIState_BossCrystal();
             _appServices = new AppServices(filePathBTT, filePathCharacters, _filterState);
 
             _uiFilterOptions = new UIFilterOptions // set default state of filterOptions
@@ -49,7 +64,10 @@ namespace Boss_Tracker
                 ExcludeClearsButton = ExcludeClearsButton,
                 ElementAmountLabel = ElementAmount
             };
-            //]]
+
+            // holds form builders
+            _bossPartyFactory = new BossPartyFactory(_appServices, _uiState_BossPanel, flowPanelBossParties);
+            _bossCrystalFactory = new BossCrystalFactory(_appServices, _uiState_BossCrystal, flowPanelBossCrystals);
 
             FirstLoad();
 
@@ -59,14 +77,15 @@ namespace Boss_Tracker
                 playertogglePanel.Location.Y + playertogglePanel.Height + 13);
 
             jobtoggleLabel.Location = new Point(jobtoggleLabel.Location.X, jobtogglePanel.Location.Y);
-
             jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);
 
-            tabControl1.TabPages[0].Controls.Add(flowPanel); // add flow panel for the boss panels into tab panel
+            // add relevant flow panels to each tab page
+            tabControl1.TabPages[0].Controls.Add(flowPanelBossParties); 
+            tabControl1.TabPages[1].Controls.Add(flowPanelBossCrystals);
         }
 
         // boss[0], partyID[1], partyType[2], charID[3], owner[4], class[5], partySize[6], cleared[7], notes[8]
-        private void FirstLoad()
+        private void FirstLoad() // INITIALIZES BOSS PANELS AND BOSS CRYSTAL PANELS
         {
             // load values from CSV
             List<string[]> csvData = _appServices.csvLoader.LoadBosses();
@@ -98,7 +117,8 @@ namespace Boss_Tracker
                     // begin checking if the next element is a different partyID
                     if (currentPartyID != csvData[i + 1][1])
                     {
-                        AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
+                        _bossPartyFactory.AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
+                        _bossCrystalFactory.AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
                         players = "";
                         jobs = "";
 
@@ -107,20 +127,25 @@ namespace Boss_Tracker
                 }
                 else // if the next element is out-of-bounds, finish up and add the final boss panel with the remaining collected data
                 {
-                    AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
+                    _bossPartyFactory.AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
+                    _bossCrystalFactory.AddBossPanel(csvData[i][0], players, jobs, csvData[i][2], csvData[i][1], csvData[i][7]);
                     players = "";
                     jobs = "";
                 }
             }
 
-            // add boss panels
-            foreach (string[] line in csvDataSolo) { AddBossPanel(line[0], line[4], line[5], line[2], line[1], line[7]); }
+            // then add boss panels for solo runs
+            foreach (string[] line in csvDataSolo) 
+            {
+                _bossPartyFactory.AddBossPanel(line[0], line[4], line[5], line[2], line[1], line[7]);
+                _bossCrystalFactory.AddBossPanel(line[0], line[4], line[5], line[2], line[1], line[7]);
+            }
 
             // add player toggle buttons
-            foreach (string player in toggleablePlayers) { AddPlayerToggle(playertogglePanel, player, toggleablePlayers.IndexOf(player)); }
+            foreach (string player in toggleablePlayers) { _bossPartyFactory.AddPlayerToggle(playertogglePanel, player, toggleablePlayers.IndexOf(player)); }
 
             // add job toggle buttons
-            foreach (string job in toggleableJobs) { AddJobToggle(jobtogglePanel, job, toggleableJobs.IndexOf(job)); }
+            foreach (string job in toggleableJobs) { _bossPartyFactory.AddJobToggle(jobtogglePanel, job, toggleableJobs.IndexOf(job)); }
 
             SubmitFilter("group"); // this loads FilterOptions into memory
         }
@@ -132,30 +157,8 @@ namespace Boss_Tracker
             {
                 _uiFilterOptions.Mode = mode;
                 _uiFilterOptions.FilterBossTextBoxText = filterbossComboBox.Text;
-                _appServices.filterHandler.ApplyFilter(_uiState, _uiFilterOptions, _filterState);
+                _appServices.filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _filterState);
             }
-        }
-
-        // finalize initial loading and add all boss panels with no filtering
-        private void AddBossPanel(string bossName, string players, string classes, string partyType, string partyID, string cleared)
-        {
-            Panel bPanel = _appServices.form1_ControlHandler.CreateBossPanel(bossName, players, classes, partyType, partyID, cleared);
-            flowPanel.Controls.Add(bPanel);
-            _uiState.panelList.Add(bPanel);
-        }
-
-        private void AddPlayerToggle(Panel panel, string player, int offset)
-        {
-            Button ptButton = _appServices.form1_ControlHandler.CreatePlayerToggleButton(panel, player, offset);
-            panel.Controls.Add(ptButton);
-            _uiState.playerToggleButtons.Add(ptButton);
-        }
-
-        private void AddJobToggle(Panel panel, string job, int offset)
-        {
-            Button jtButton = _appServices.form1_ControlHandler.CreateJobToggleButton(panel, job, offset);
-            panel.Controls.Add(jtButton);
-            _uiState.jobToggleButtons.Add(jtButton);
         }
 
         // group is the default filter mode. Checkboxes will be handled in other conditionals
@@ -165,7 +168,7 @@ namespace Boss_Tracker
         private void clearfilterButton_Click(object sender, EventArgs e)
         {
             // DEBUG LABEL HERE
-            ElementAmount.Text = _uiState.panelList.Count.ToString();
+            ElementAmount.Text = _uiState_BossPanel.panelList.Count.ToString();
 
             // reset the state of check boxes, activePlayers list, and buttons
             soloCheckBox.Checked = false;
@@ -182,12 +185,12 @@ namespace Boss_Tracker
 
             filterbossComboBox.Text = "";
 
-            foreach (Button btn in _uiState.playerToggleButtons) { btn.BackColor = SystemColors.ControlLightLight; }
-            foreach (Button btn in _uiState.jobToggleButtons) { btn.BackColor = SystemColors.ControlLightLight; }
+            foreach (Button btn in _uiState_BossPanel.playerToggleButtons) { btn.BackColor = SystemColors.ControlLightLight; }
+            foreach (Button btn in _uiState_BossPanel.jobToggleButtons) { btn.BackColor = SystemColors.ControlLightLight; }
 
             // filtered panel list panels are disabled and reset in FilterHandler.cs
             // default panels are then shown
-            _appServices.filterHandler.ClearFilterRefresh(_uiState.panelList, _uiState.filteredPanelList);
+            _appServices.filterHandler.ClearFilterRefresh(_uiState_BossPanel.panelList, _uiState_BossPanel.filteredPanelList);
 
             // reset colors in jobOwnerForm if it is open
             if (_jobOwnerForm != null)
@@ -208,8 +211,8 @@ namespace Boss_Tracker
             _jobOwnerForm.StartPosition = FormStartPosition.Manual;
 
             Point parentCenter = new Point(
-                this.Left + (this.Width - _jobOwnerForm.Width) / 2,
-                this.Top + (this.Height - _jobOwnerForm.Height) / 2
+                Left + (Width - _jobOwnerForm.Width) / 2,
+                Top + (Height - _jobOwnerForm.Height) / 2
             );
 
             _jobOwnerForm.Location = parentCenter;

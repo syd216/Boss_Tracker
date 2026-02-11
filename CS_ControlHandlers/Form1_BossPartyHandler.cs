@@ -4,13 +4,13 @@ using Boss_Tracker.Properties;
 
 namespace Boss_Tracker.CS_ControlHandlers
 {
-    public class Form1_ControlHandler
+    public class Form1_BossPartyHandler
     {
         private readonly FilterState _filterState;
         private readonly SaveToFile _saveToFile;
         private readonly string _filePathBTT = "";
 
-        public Form1_ControlHandler(FilterState filterState, string filePathBTT) 
+        public Form1_BossPartyHandler(FilterState filterState, string filePathBTT) 
         {
             _filterState = filterState;
             _saveToFile = new SaveToFile(); 
@@ -256,37 +256,6 @@ namespace Boss_Tracker.CS_ControlHandlers
                 partyIDLabel.Width = bossLabel.Width; // also a long label that matches the boss label width
             }
 
-            // needs to be converted to an array or list later to properly hold player values *********************
-            // instead of using a label as a container for variables                          *********************
-            // this and jobsLabel will be hidden as they are more code-functional rather than visual
-            Label playersLabel = new Label
-            {
-                Name = "playersLabel",
-                Text = players,
-                Width = 300,
-                Height = 25,
-                BackColor = labelColor,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(5),
-                Location = new Point(xOffset, 25),
-                Font = fontStyle,
-                Visible = false
-            };
-
-            Label jobsLabel = new Label
-            {
-                Name = "jobsLabel",
-                Text = jobs,
-                Width = 300,
-                Height = 25,
-                BackColor = labelColor,
-                BorderStyle = BorderStyle.FixedSingle,
-                Location = new Point(xOffset, 50),
-                Margin = new Padding(5),
-                Font = fontStyle,
-                Visible = false
-            };
-
             // FOR LOOPS FOR MAKING THE VISUAL LABELS----------------------------------------------------------------
             for (int i = 0; i < splitPlayers.Length - 1; i++) // need to -1 the length because the tail end is empty data: " "
             {
@@ -343,7 +312,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             {
                 Label visualPlayerLabel = new Label
                 {
-                    Name = $"visualPlayerLabel",
+                    Name = "visualPlayerLabel",
                     Text = players,
                     Width = bossLabel.Width,
                     Height = 25,
@@ -356,7 +325,7 @@ namespace Boss_Tracker.CS_ControlHandlers
 
                 Label visualJobsLabel = new Label
                 {
-                    Name = $"visualJobLabel",
+                    Name = "visualJobLabel",
                     Text = jobs,
                     Width = bossLabel.Width,
                     Height = 25,
@@ -397,9 +366,19 @@ namespace Boss_Tracker.CS_ControlHandlers
             panel.Controls.Add(bossPictureBox);
             panel.Controls.Add(bossLabel);
             panel.Controls.Add(partyIDLabel);
-            panel.Controls.Add(playersLabel);
-            panel.Controls.Add(jobsLabel);
             panel.Controls.Add(clearButton);
+
+            // add players related to the current panel and add to a helper class to contain them
+            BossPanelContext bpc = new BossPanelContext
+            {
+                BossName = boss,
+                BossPanelPlayers = players,
+                BossPanelJobs = jobs,
+                ClearButton = clearButton
+            };
+
+            // add the modified context helper to the tag for future retrieval by the sorter
+            panel.Tag = bpc;
 
             return panel;
         }
