@@ -1,15 +1,16 @@
-﻿using Boss_Tracker.CS_States;
+﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_States;
+using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Boss_Tracker.CS_ControlHandlers
 {
     public class Form1_BossCrystalHandler
     {
+        // string helper
+        private readonly StringUtils _stringUtils = new StringUtils();
+        private readonly BossCrystal_Prices _bossCrystal_Prices;
+
         // panel colors
         Color panelColor = Color.FromArgb(224, 224, 224); // gray
         Color labelColor = Color.FromArgb(244, 244, 244); // light-gray
@@ -17,6 +18,11 @@ namespace Boss_Tracker.CS_ControlHandlers
         // font settings
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
         private Font fontStyle = new Font("Segoe UI", 9);
+
+        public Form1_BossCrystalHandler(BossCrystal_Prices BC_P)
+        {
+            _bossCrystal_Prices = BC_P;
+        }
 
         // boss panels
         public Panel CreateBossCrystalPanel(string bossName, string players, string jobs, string partyType)
@@ -34,7 +40,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             string difficulty = "";
             string[] keywords = { "Easy", "Normal", "Hard", "Chaos", "Extreme" };
 
-            string? foundKeyword = keywords.FirstOrDefault(k => boss.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
+            string? foundKeyword = keywords.FirstOrDefault(k => bossName.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
 
             // split the string of players & jobs that is retrieved from the CSV
             string[] splitPlayers = players.Split(" ");
@@ -60,10 +66,14 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             int xOffset = bossPictureBox.Width + 1;
 
+            int labelPlayerAmount = 0;
+            if (splitPlayers.Length - 1 > 0) { labelPlayerAmount = players.Split().Length - 1; }
+            else { labelPlayerAmount = 1; }
+
             Label bossLabel = new Label
             {
                 Name = "bossLabel",
-                Text = $"{boss} ({difficulty}) | {partyType} | [{players.Split().Length - 1}]",
+                Text = $"{boss} ({difficulty}) | {partyType} | [{labelPlayerAmount}]",
                 Width = 300, // set width dependant on if player count over 3
                 Height = 25,
                 TextAlign = ContentAlignment.MiddleLeft,
@@ -74,19 +84,42 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Font = fontStyleBold
             };
 
-            Label mesoLabel = new Label
+            Label mesoPartyLabel = new Label
             {
-                Name = "mesoLabel",
-                Text = $"Meso: 1,343,341,134",
-                Width = 150, // set width dependant on if player count over 3
+                Name = "mesoPartyLabel",
+                Width = 153,
                 Height = 25,
-                TextAlign = ContentAlignment.MiddleLeft,
+                TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = labelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
                 Font = fontStyleBold
             };
-            mesoLabel.Location = new Point(panel.Width - mesoLabel.Width, 0);
+            mesoPartyLabel.Location = new Point(panel.Right - mesoPartyLabel.Width, 0);
+
+            PictureBox mesoPartyPictureBox = new PictureBox
+            {
+                Width = 25,
+                Height = 25,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(5),
+                BackgroundImage = Resources.ResourceManager.GetObject("MesoGold") as Image,
+                BackgroundImageLayout = ImageLayout.Stretch,
+            };
+            mesoPartyPictureBox.Location = new Point(mesoPartyLabel.Left + 1 - mesoPartyPictureBox.Width, mesoPartyLabel.Location.Y);
+
+            Label mesoLabel = new Label
+            {
+                Name = "mesoPartyLabel",
+                Width = 153,
+                Height = 25,
+                TextAlign = ContentAlignment.MiddleCenter,
+                BackColor = labelColor,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(5),
+                Font = fontStyleBold
+            };
+            mesoLabel.Location = new Point(mesoPartyPictureBox.Left + 1 - mesoLabel.Width, 0);
 
             PictureBox mesoPictureBox = new PictureBox
             {
@@ -94,7 +127,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Height = 25,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
-                BackgroundImage = Resources.ResourceManager.GetObject("Meso") as Image,
+                BackgroundImage = Resources.ResourceManager.GetObject("MesoGrey") as Image,
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
             mesoPictureBox.Location = new Point(mesoLabel.Left + 1 - mesoPictureBox.Width, mesoLabel.Location.Y);
@@ -190,18 +223,42 @@ namespace Boss_Tracker.CS_ControlHandlers
             panel.Controls.Add(bossPictureBox);
             panel.Controls.Add(bossLabel);
             panel.Controls.Add(mesoPictureBox);
+            panel.Controls.Add(mesoPartyPictureBox);
             panel.Controls.Add(mesoLabel);
+            panel.Controls.Add(mesoPartyLabel);
+
+            // we pass bossName instead of just the cut down boss variable as the table uses both the full boss name with difficulty
+            long[] mesoAmounts = CalculateMeso(mesoLabel, players, bossName);
+            // also update mesoLabel with proper commas added every 3 numbers
+            mesoLabel.Text = mesoAmounts[0].ToString("N0");
+            mesoPartyLabel.Text = mesoAmounts[1].ToString("N0");
 
             BossCrystalContext bcc = new BossCrystalContext
             {
                 BossName = boss,
-                BossPanelPlayers = players
+                BossPanelPlayers = _stringUtils.TrimStringArrayEnd(players),
+                Meso = mesoAmounts[1], // only need to pass final meso amount here
             };
 
             // add the modified context helper to the tag for future retrieval by the sorter
             panel.Tag = bcc;
 
             return panel;
+        }
+
+        private long[] CalculateMeso(Label mesoLabel, String players, String bossName)
+        {
+            // make sure no " " exists in string and get length
+            int playersTrimmedLength = _stringUtils.TrimStringArrayEnd(players).Length;
+            long[] finalMesos = new long[2]; // size of 2, [0] = solo meso, [1] = party meso
+
+            if (_bossCrystal_Prices.BossCrystalPricesDict.ContainsKey(bossName))
+            {
+                finalMesos[0] = _bossCrystal_Prices.BossCrystalPricesDict[bossName];
+                finalMesos[1] = _bossCrystal_Prices.BossCrystalPricesDict[bossName] / playersTrimmedLength;
+            }
+            
+            return finalMesos;
         }
     }
 }

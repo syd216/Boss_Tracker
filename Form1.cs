@@ -14,13 +14,14 @@ namespace Boss_Tracker
         private readonly Dictionary<string, string> _configDict = new Dictionary<string, string>();
 
         // classes for setters/getters
-        private FilterState _filterState;
+        private BossPanel_FilterState _bossPanel_FS;
         private UIState_BossPanel _uiState_BossPanel;
         private UIState_BossCrystal _uiState_BossCrystal;
         private AppServices _appServices;
         private UIFilterOptions _uiFilterOptions;
         private BossPartyFactory _bossPartyFactory;
         private BossCrystalFactory _bossCrystalFactory;
+        private BossCrystal_Prices _bossCrystal_Prices;
 
         // instead of adding elements directly to the control, a flowpanel is used to avoid resizing issues
         FlowLayoutPanel flowPanelBossParties = new FlowLayoutPanel()
@@ -41,7 +42,7 @@ namespace Boss_Tracker
             Padding = new Padding(5)
         };
 
-        public Form1(string filePathBTT, string filePathCharacters, Dictionary<string, string> configDict)
+        public Form1(string filePathBTT, string filePathCharacters, string filePathBosses, Dictionary<string, string> configDict)
         {
             InitializeComponent();
 
@@ -49,11 +50,11 @@ namespace Boss_Tracker
 
             // set CSVLoader and ControlHandler in constructor
             _configDict = configDict; // set from Program.cs
-
-            _filterState = new FilterState();
+            _bossPanel_FS = new BossPanel_FilterState();
             _uiState_BossPanel = new UIState_BossPanel();
+            _bossCrystal_Prices = new BossCrystal_Prices();
             _uiState_BossCrystal = new UIState_BossCrystal();
-            _appServices = new AppServices(filePathBTT, filePathCharacters, _filterState);
+            _appServices = new AppServices(filePathBTT, filePathCharacters, filePathBosses, _bossPanel_FS, _bossCrystal_Prices);
 
             _uiFilterOptions = new UIFilterOptions // set default state of filterOptions
             {
@@ -80,7 +81,7 @@ namespace Boss_Tracker
             jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);
 
             // add relevant flow panels to each tab page
-            tabControl1.TabPages[0].Controls.Add(flowPanelBossParties); 
+            tabControl1.TabPages[0].Controls.Add(flowPanelBossParties);
             tabControl1.TabPages[1].Controls.Add(flowPanelBossCrystals);
         }
 
@@ -92,7 +93,8 @@ namespace Boss_Tracker
             List<string[]> csvDataSolo = _appServices.csvLoader.LoadBossesSolo();
             List<string> toggleablePlayers = _appServices.csvLoader.LoadPlayerNames();
             List<string> toggleableJobs = _appServices.csvLoader.LoadPlayerJobs();
-            _filterState.JobOwnersDict = _appServices.csvLoader.LoadPlayerJobOwners();
+            _bossPanel_FS.JobOwnersDict = _appServices.csvLoader.LoadPlayerJobOwners();
+            _bossCrystal_Prices.BossCrystalPricesDict = _appServices.csvLoader.LoadBossCrystalPrices();
 
             // set value to first partyID to begin comparing to the next partyID
             string currentPartyID = csvData[0][1];
@@ -135,7 +137,7 @@ namespace Boss_Tracker
             }
 
             // then add boss panels for solo runs
-            foreach (string[] line in csvDataSolo) 
+            foreach (string[] line in csvDataSolo)
             {
                 _bossPartyFactory.AddBossPanel(line[0], line[4], line[5], line[2], line[1], line[7]);
                 _bossCrystalFactory.AddBossPanel(line[0], line[4], line[5], line[2], line[1], line[7]);
@@ -147,23 +149,23 @@ namespace Boss_Tracker
             // add job toggle buttons
             foreach (string job in toggleableJobs) { _bossPartyFactory.AddJobToggle(jobtogglePanel, job, toggleableJobs.IndexOf(job)); }
 
-            SubmitFilter("group"); // this loads FilterOptions into memory
+            BossPanel_SubmitFilter("group"); // this loads FilterOptions into memory
         }
 
-        // set variables and send off paramters to FilterHandler.cs
-        private void SubmitFilter(string mode)
+        // set variables and send off paramters to BossPanel_FilterHandler.cs
+        private void BossPanel_SubmitFilter(string mode)
         {
             if (_uiFilterOptions != null)
             {
                 _uiFilterOptions.Mode = mode;
                 _uiFilterOptions.FilterBossTextBoxText = filterbossComboBox.Text;
-                _appServices.filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _filterState);
+                _appServices.bp_filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _bossPanel_FS);
             }
         }
 
         // group is the default filter mode. Checkboxes will be handled in other conditionals
-        private void filterButton_Click(object sender, EventArgs e) { SubmitFilter("Group"); }
-        private void filterbossTextBox_KeyDown(object sender, KeyEventArgs e) { if (e.KeyCode == Keys.Enter) { SubmitFilter("Group"); } }
+        private void filterButton_Click(object sender, EventArgs e) { BossPanel_SubmitFilter("Group"); }
+        private void filterbossTextBox_KeyDown(object sender, KeyEventArgs e) { if (e.KeyCode == Keys.Enter) { BossPanel_SubmitFilter("Group"); } }
 
         private void clearfilterButton_Click(object sender, EventArgs e)
         {
@@ -175,13 +177,13 @@ namespace Boss_Tracker
             excludeSoloCheckBox.Checked = false;
             ExcludeClearsButton.Checked = false;
 
-            _filterState.ActivePlayers.Clear();
-            _filterState.ExcludedPlayers.Clear();
-            _filterState.ActiveJobs.Clear();
-            _filterState.ExcludedJobs.Clear();
+            _bossPanel_FS.ActivePlayers.Clear();
+            _bossPanel_FS.ExcludedPlayers.Clear();
+            _bossPanel_FS.ActiveJobs.Clear();
+            _bossPanel_FS.ExcludedJobs.Clear();
 
-            _filterState.JobOwnersActive.Clear();
-            _filterState.JobOwnersExcluded.Clear();
+            _bossPanel_FS.JobOwnersActive.Clear();
+            _bossPanel_FS.JobOwnersExcluded.Clear();
 
             filterbossComboBox.Text = "";
 
@@ -190,7 +192,7 @@ namespace Boss_Tracker
 
             // filtered panel list panels are disabled and reset in FilterHandler.cs
             // default panels are then shown
-            _appServices.filterHandler.ClearFilterRefresh(_uiState_BossPanel.panelList, _uiState_BossPanel.filteredPanelList);
+            _appServices.bp_filterHandler.ClearFilterRefresh(_uiState_BossPanel.panelList, _uiState_BossPanel.filteredPanelList);
 
             // reset colors in jobOwnerForm if it is open
             if (_jobOwnerForm != null)
@@ -207,7 +209,7 @@ namespace Boss_Tracker
             // pass the main form (Form1) into the JobOwnerForm.cs constructor to access dict
             if (_jobOwnerForm != null) { _jobOwnerForm.Close(); }
 
-            _jobOwnerForm = new JobOwnerForm(_filterState.JobOwnersDict, _filterState);
+            _jobOwnerForm = new JobOwnerForm(_bossPanel_FS.JobOwnersDict, _bossPanel_FS);
             _jobOwnerForm.StartPosition = FormStartPosition.Manual;
 
             Point parentCenter = new Point(
@@ -234,6 +236,36 @@ namespace Boss_Tracker
             MessageBox.Show("Program will re-open after closing this message box");
             Process.Start(Environment.ProcessPath!);
             Environment.Exit(0); // this kills the process entirely (this.close performs standard application closure)
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // 1 is crystal page, 0 is boss page
+            // reveal/hide boss crystal buttons
+            if (tabControl1.SelectedIndex == 1)
+            {
+                filterCrystal.Show();
+                filterReport.Show();
+            }
+            else if (tabControl1.SelectedIndex == 0)
+            {
+                filterCrystal.Hide();
+                filterReport.Hide();
+            }
+        }
+
+        private void filterCrystal_Click(object sender, EventArgs e)
+        {
+            BossCrystal_SubmitFilter();
+        }
+
+        // set variables and send off paramters to BossCrystal_FilterHandler.cs
+        private void BossCrystal_SubmitFilter()
+        {
+            if (_uiFilterOptions != null)
+            {
+                _appServices.bc_filterHandler.ApplyFilter(_uiState_BossCrystal, _bossPanel_FS);
+            }
         }
     }
 }

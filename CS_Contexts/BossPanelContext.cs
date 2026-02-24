@@ -1,4 +1,4 @@
-﻿namespace Boss_Tracker.CS_States
+﻿namespace Boss_Tracker.CS_Contexts
 {
     public class BossPanelContext
     {

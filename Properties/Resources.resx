@@ -169,7 +169,10 @@
   <data name="GearHover" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\GearHover.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Meso" type="System.Resources.ResXFileRef, System.Windows.Forms">
+  <data name="MesoGold" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\Meso.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="MesoGrey" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\Meso2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

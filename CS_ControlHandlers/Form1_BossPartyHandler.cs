@@ -1,4 +1,5 @@
-﻿using Boss_Tracker.CS_States;
+﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
 
@@ -6,11 +7,11 @@ namespace Boss_Tracker.CS_ControlHandlers
 {
     public class Form1_BossPartyHandler
     {
-        private readonly FilterState _filterState;
+        private readonly BossPanel_FilterState _filterState;
         private readonly SaveToFile _saveToFile;
         private readonly string _filePathBTT = "";
 
-        public Form1_BossPartyHandler(FilterState filterState, string filePathBTT) 
+        public Form1_BossPartyHandler(BossPanel_FilterState filterState, string filePathBTT) 
         {
             _filterState = filterState;
             _saveToFile = new SaveToFile(); 
@@ -217,10 +218,14 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             int xOffset = bossPictureBox.Width + 1;
 
+            int labelPlayerAmount = 0;
+            if (splitPlayers.Length - 1 > 0) { labelPlayerAmount = players.Split().Length - 1; }
+            else { labelPlayerAmount = 1; }
+
             Label bossLabel = new Label
             {
                 Name = "bossLabel",
-                Text = $"{boss} ({difficulty}) | {partyType} | [{players.Split().Length - 1}]",
+                Text = $"{boss} ({difficulty}) | {partyType} | [{labelPlayerAmount}]",
                 Width = 300, // set width dependant on if player count over 3
                 Height = 25, 
                 TextAlign = ContentAlignment.MiddleLeft,

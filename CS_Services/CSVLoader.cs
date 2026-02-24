@@ -1,19 +1,20 @@
-﻿using System.Text.Json;
-
-namespace Boss_Tracker.CS_Services
+﻿namespace Boss_Tracker.CS_Services
 {
     public class CSVLoader
     {
         string filePathTracker = "";
         string filePathCharacters = "";
+        string filePathBosses = "";
 
         // set file paths from config file
-        public CSVLoader(string fPT, string fPC)
+        public CSVLoader(string fPT, string fPC, string fPB)
         {
             filePathTracker = fPT;
             filePathCharacters = fPC;
+            filePathBosses = fPB;
         }
 
+        // BossPartyTracker.csv reading =====================================================================
         // IENumerable string return allows the receiving LINQ to process the data one-by-one
         // rather than having to return an entire list/array all at once
         private IEnumerable<string[]> ReadCSVLinesTracker()
@@ -87,8 +88,9 @@ namespace Boss_Tracker.CS_Services
 
             return cleanedBosses;
         }
+        // BossPartyTracker.csv reading =====================================================================
 
-        // player-job association
+        // Characters.csv reading ===========================================================================
         private List<string[]> ReadCSVLinesCharacters()
         {
             // CharID [0], Owner [1], Class [2], Type [3]
@@ -130,5 +132,41 @@ namespace Boss_Tracker.CS_Services
 
             return jobOwnersDict;
         }
+        // Characters.csv reading ===========================================================================
+
+        // Bosses.csv reading ===============================================================================
+        private List<string[]> ReadCSVLinesBosses()
+        {
+            // Boss [0], Tier [1], Clear Order [2], Price [3]
+            using (FileStream fs = new FileStream(filePathBosses, FileMode.Open, FileAccess.Read))
+            {
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    // skip first filler row (header cells)
+                    sr.ReadLine();
+
+                    List<string[]> lines = new List<string[]>();
+                    string? curLine;
+                    while ((curLine = sr.ReadLine()) != null) { lines.Add(curLine.Split(',')); }
+
+                    return lines;
+                }
+            }
+        }
+
+        public Dictionary<string, long> LoadBossCrystalPrices()
+        {
+            Dictionary<string, long> bossCrystalPricesDict = new Dictionary<string, long>();
+            List<string[]> lines = ReadCSVLinesBosses();
+
+            foreach (string[] line in lines)
+            {
+                // 0 is the boss name (with difficulty at the beginning) and 3 is the price
+                bossCrystalPricesDict.Add(line[0], long.Parse(line[3]));
+            }
+
+            return bossCrystalPricesDict;
+        }
+        // Bosses.csv reading ===============================================================================
     }
 }

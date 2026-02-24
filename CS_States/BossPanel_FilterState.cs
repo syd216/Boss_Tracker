@@ -1,6 +1,6 @@
 ﻿namespace Boss_Tracker.CS_States
 {
-    public class FilterState
+    public class BossPanel_FilterState
     {
         // for simple job filter (not job owner form buttons)
         public List<string> ActivePlayers { get; set; } = new();

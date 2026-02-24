@@ -203,9 +203,19 @@ namespace Boss_Tracker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Meso {
+        internal static System.Drawing.Bitmap MesoGold {
             get {
-                object obj = ResourceManager.GetObject("Meso", resourceCulture);
+                object obj = ResourceManager.GetObject("MesoGold", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap MesoGrey {
+            get {
+                object obj = ResourceManager.GetObject("MesoGrey", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

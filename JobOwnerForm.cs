@@ -9,7 +9,7 @@ namespace Boss_Tracker
         private readonly JobOwnerForm_ControlHandler _controlHandler;
         public List<Button> buttons = new List<Button>(); 
 
-        public JobOwnerForm(Dictionary<string, List<string>> jobOwnersDict, FilterState filterState)
+        public JobOwnerForm(Dictionary<string, List<string>> jobOwnersDict, BossPanel_FilterState filterState)
         {
             InitializeComponent();
             _controlHandler = new JobOwnerForm_ControlHandler(filterState);

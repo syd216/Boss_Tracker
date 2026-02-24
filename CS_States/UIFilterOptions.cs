@@ -9,6 +9,6 @@
         public required CheckBox SoloCheckBox { get; set; }
         public required CheckBox ExcludeSoloCheckBox { get; set; }
         public required CheckBox ExcludeClearsButton { get; set; }
-        public required Label ElementAmountLabel { get; set; }
+        public required TextBox ElementAmountLabel { get; set; }
     }
 }

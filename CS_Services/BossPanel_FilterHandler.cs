@@ -1,11 +1,12 @@
-﻿using Boss_Tracker.CS_States;
+﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 
 // fix exclude list (ex: exlcuding NL but including all of zak's jobs and blaster shows nothing)
 
 namespace Boss_Tracker.CS_Services
 {
-    public class FilterHandler
+    public class BossPanel_FilterHandler
     {
         StringUtils _stringUtils = new StringUtils();
 
@@ -17,7 +18,7 @@ namespace Boss_Tracker.CS_Services
         string players_string = "";
         string[] cleanedPlayerList = { "" };
 
-        public void ApplyFilter(UIState_BossPanel uiState, UIFilterOptions uiFilterOptions, FilterState filterState)
+        public void ApplyFilter(UIState_BossPanel uiState, UIFilterOptions uiFilterOptions, BossPanel_FilterState filterState)
         {
             uiState.filteredPanelList.Clear(); // clear list on every new filter
             string fbTBText = uiFilterOptions.FilterBossTextBoxText;
@@ -27,7 +28,7 @@ namespace Boss_Tracker.CS_Services
                 bool isValid = true;
                 bool cleared = false;
 
-                // retrieve values from helper file
+                // retrieve values from context file
                 if (p.Tag is BossPanelContext bpc)
                 {
                     boss_string = bpc.BossName;
@@ -36,8 +37,6 @@ namespace Boss_Tracker.CS_Services
                     
                     if (bpc.ClearButton.Text == "Unclear") { cleared = true; }
                 }
-
-                Console.WriteLine(players_string);
 
                 // trim string array end since there is a " " for every line retrieved from the csv file
                 cleanedPlayerList = _stringUtils.TrimStringArrayEnd(players_string);
@@ -128,6 +127,7 @@ namespace Boss_Tracker.CS_Services
                 if (isValid) { uiState.filteredPanelList.Add(p);  }
             }
 
+            // HIDE AND REVEAL FILTERED PANEL LIST DEPENDING IF ANY PANELS EXIST IN THAT LIS
             if (uiState.filteredPanelList.Count > 0)
             {
                 foreach (Panel p in uiState.panelList)
@@ -148,7 +148,7 @@ namespace Boss_Tracker.CS_Services
             else { MessageBox.Show("No results found", "Notice"); }
         }
 
-        bool AdvancedJobOwnerFilter(FilterState filterState)
+        bool AdvancedJobOwnerFilter(BossPanel_FilterState filterState)
         {
             if (filterState.JobOwnersActive.Count > 0)
             {

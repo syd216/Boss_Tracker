@@ -7,15 +7,16 @@ namespace Boss_Tracker.CS_Services
     {
         public CSVLoader csvLoader { get; }
         public CSVDownloader csvDownloader { get; } = new();
-        public FilterHandler filterHandler { get; } = new();
+        public BossPanel_FilterHandler bp_filterHandler { get; } = new();
+        public BossCrystal_FilterHandler bc_filterHandler { get; } = new();
         public Form1_BossPartyHandler form1_BossPartiesHandler { get; }
         public Form1_BossCrystalHandler form1_BossCrystalsHandler { get; }
 
-        public AppServices(string bttPath, string charPath, FilterState filterState)
+        public AppServices(string bttPath, string charPath, string fpbPath, BossPanel_FilterState BP_FS, BossCrystal_Prices BC_P)
         {
-            csvLoader = new CSVLoader(bttPath, charPath);
-            form1_BossPartiesHandler = new Form1_BossPartyHandler(filterState, bttPath);
-            form1_BossCrystalsHandler = new Form1_BossCrystalHandler();
+            csvLoader = new CSVLoader(bttPath, charPath, fpbPath);
+            form1_BossPartiesHandler = new Form1_BossPartyHandler(BP_FS, bttPath);
+            form1_BossCrystalsHandler = new Form1_BossCrystalHandler(BC_P);
         }
     }
 }
