@@ -229,14 +229,24 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             // we pass bossName instead of just the cut down boss variable as the table uses both the full boss name with difficulty
             long[] mesoAmounts = CalculateMeso(mesoLabel, players, bossName);
-            // also update mesoLabel with proper commas added every 3 numbers
+            // also update mesoLabel with comma styling
             mesoLabel.Text = mesoAmounts[0].ToString("N0");
             mesoPartyLabel.Text = mesoAmounts[1].ToString("N0");
+
+            // construct player & job owner
+            Dictionary<String, String> playerjobPairs = new Dictionary<String, String>();
+            String[] trimmedPlayers = _stringUtils.TrimStringArrayEnd(players);
+            String[] trimmedJobs = _stringUtils.TrimStringArrayEnd(jobs);
+
+            for (int i = 0; i < trimmedPlayers.Length; i++)
+            {
+                playerjobPairs.Add(trimmedPlayers[i], trimmedJobs[i]);
+            }
 
             BossCrystalContext bcc = new BossCrystalContext
             {
                 BossName = boss,
-                BossPanelPlayers = _stringUtils.TrimStringArrayEnd(players),
+                BossPanelPlayerJobPairs = playerjobPairs,
                 Meso = mesoAmounts[1], // only need to pass final meso amount here
             };
 
@@ -246,6 +256,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             return panel;
         }
 
+        // using the dictionary containing the meso amount for all bosses, calculate for context and text labels;
         private long[] CalculateMeso(Label mesoLabel, String players, String bossName)
         {
             // make sure no " " exists in string and get length
@@ -254,6 +265,8 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             if (_bossCrystal_Prices.BossCrystalPricesDict.ContainsKey(bossName))
             {
+                // index 0 contains the meso amount that the boss has for 1 player
+                // index 1 contains the meso amount after the amount of players is divided against it
                 finalMesos[0] = _bossCrystal_Prices.BossCrystalPricesDict[bossName];
                 finalMesos[1] = _bossCrystal_Prices.BossCrystalPricesDict[bossName] / playersTrimmedLength;
             }

@@ -8,7 +8,9 @@ namespace Boss_Tracker
 {
     public partial class Form1 : Form
     {
-        JobOwnerForm? _jobOwnerForm; // need to have the form saved to memory in order to make sure only one instance exists
+        // need to have the forms saved to memory in order to make sure only one instance exists
+        JobOwnerForm? _jobOwnerForm;
+        CrystalReportForm? _crystalReportForm;
 
         // dictionary for preserving data from the config file
         private readonly Dictionary<string, string> _configDict = new Dictionary<string, string>();
@@ -155,12 +157,9 @@ namespace Boss_Tracker
         // set variables and send off paramters to BossPanel_FilterHandler.cs
         private void BossPanel_SubmitFilter(string mode)
         {
-            if (_uiFilterOptions != null)
-            {
-                _uiFilterOptions.Mode = mode;
-                _uiFilterOptions.FilterBossTextBoxText = filterbossComboBox.Text;
-                _appServices.bp_filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _bossPanel_FS);
-            }
+            _uiFilterOptions.Mode = mode;
+            _uiFilterOptions.FilterBossTextBoxText = filterbossComboBox.Text;
+            _appServices.bp_filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _bossPanel_FS);
         }
 
         // group is the default filter mode. Checkboxes will be handled in other conditionals
@@ -262,9 +261,27 @@ namespace Boss_Tracker
         // set variables and send off paramters to BossCrystal_FilterHandler.cs
         private void BossCrystal_SubmitFilter()
         {
-            if (_uiFilterOptions != null)
+            _appServices.bc_filterHandler.ApplyFilter(_uiState_BossCrystal, _bossPanel_FS);
+        }
+
+        private void filterReport_Click(object sender, EventArgs e)
+        {
+            if (_appServices.bc_filterHandler.ApplyFilter(_uiState_BossCrystal, _bossPanel_FS) == 0)
             {
-                _appServices.bc_filterHandler.ApplyFilter(_uiState_BossCrystal, _bossPanel_FS);
+                // pass the main form (Form1) into the JobOwnerForm.cs constructor to access dict
+                if (_crystalReportForm != null) { _crystalReportForm.Dispose(); }
+
+                _crystalReportForm = new CrystalReportForm(_uiState_BossCrystal, _appServices);
+                _crystalReportForm.StartPosition = FormStartPosition.Manual;
+
+                Point parentCenter = new Point(
+                    Left + (Width - _crystalReportForm.Width) / 2,
+                    Top + (Height - _crystalReportForm.Height) / 2
+                );
+
+                _crystalReportForm.Location = parentCenter;
+                _crystalReportForm.BringToFront();
+                _crystalReportForm.Show();
             }
         }
     }

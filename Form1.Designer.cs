@@ -106,7 +106,6 @@
             // 
             // panel1
             // 
-            panel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(ElementAmount);
             panel1.Controls.Add(ExcludeClearsButton);
@@ -302,6 +301,7 @@
             filterReport.Text = "Crystal Report";
             filterReport.UseVisualStyleBackColor = true;
             filterReport.Visible = false;
+            filterReport.Click += filterReport_Click;
             // 
             // Form1
             // 
