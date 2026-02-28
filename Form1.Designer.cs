@@ -32,9 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             filterButton = new Button();
             clearfilterButton = new Button();
-            label1 = new Label();
-            label2 = new Label();
-            panel1 = new Panel();
+            bossnameLabel = new Label();
+            playersLabel = new Label();
+            optionsPanel = new Panel();
             ElementAmount = new TextBox();
             ExcludeClearsButton = new CheckBox();
             DownloadButton = new Button();
@@ -52,7 +52,7 @@
             imageList1 = new ImageList(components);
             filterCrystal = new Button();
             filterReport = new Button();
-            panel1.SuspendLayout();
+            optionsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)jobownerButton).BeginInit();
             tabControl1.SuspendLayout();
             SuspendLayout();
@@ -62,7 +62,7 @@
             filterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterButton.BackColor = SystemColors.ControlLightLight;
             filterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            filterButton.Location = new Point(1009, 21);
+            filterButton.Location = new Point(1009, 19);
             filterButton.Name = "filterButton";
             filterButton.Size = new Size(75, 23);
             filterButton.TabIndex = 1;
@@ -74,7 +74,7 @@
             // 
             clearfilterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             clearfilterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            clearfilterButton.Location = new Point(1009, 50);
+            clearfilterButton.Location = new Point(1009, 49);
             clearfilterButton.Name = "clearfilterButton";
             clearfilterButton.Size = new Size(75, 23);
             clearfilterButton.TabIndex = 3;
@@ -82,42 +82,42 @@
             clearfilterButton.UseVisualStyleBackColor = true;
             clearfilterButton.Click += clearfilterButton_Click;
             // 
-            // label1
+            // bossnameLabel
             // 
-            label1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label1.AutoSize = true;
-            label1.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            label1.Location = new Point(785, 25);
-            label1.Name = "label1";
-            label1.Size = new Size(63, 14);
-            label1.TabIndex = 5;
-            label1.Text = "Boss Name";
+            bossnameLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            bossnameLabel.AutoSize = true;
+            bossnameLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
+            bossnameLabel.Location = new Point(785, 25);
+            bossnameLabel.Name = "bossnameLabel";
+            bossnameLabel.Size = new Size(63, 14);
+            bossnameLabel.TabIndex = 5;
+            bossnameLabel.Text = "Boss Name";
             // 
-            // label2
+            // playersLabel
             // 
-            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            label2.Location = new Point(786, 53);
-            label2.Name = "label2";
-            label2.Size = new Size(43, 14);
-            label2.TabIndex = 6;
-            label2.Text = "Players";
+            playersLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            playersLabel.AutoSize = true;
+            playersLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
+            playersLabel.Location = new Point(786, 53);
+            playersLabel.Name = "playersLabel";
+            playersLabel.Size = new Size(43, 14);
+            playersLabel.TabIndex = 6;
+            playersLabel.Text = "Players";
             // 
-            // panel1
+            // optionsPanel
             // 
-            panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(ElementAmount);
-            panel1.Controls.Add(ExcludeClearsButton);
-            panel1.Controls.Add(DownloadButton);
-            panel1.Controls.Add(excludeSoloCheckBox);
-            panel1.Controls.Add(soloCheckBox);
-            panel1.Controls.Add(label3);
-            panel1.Font = new Font("UD Digi Kyokasho N-B", 9F, FontStyle.Bold);
-            panel1.Location = new Point(778, 441);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(314, 117);
-            panel1.TabIndex = 8;
+            optionsPanel.BorderStyle = BorderStyle.FixedSingle;
+            optionsPanel.Controls.Add(ElementAmount);
+            optionsPanel.Controls.Add(ExcludeClearsButton);
+            optionsPanel.Controls.Add(DownloadButton);
+            optionsPanel.Controls.Add(excludeSoloCheckBox);
+            optionsPanel.Controls.Add(soloCheckBox);
+            optionsPanel.Controls.Add(label3);
+            optionsPanel.Font = new Font("UD Digi Kyokasho N-B", 9F, FontStyle.Bold);
+            optionsPanel.Location = new Point(778, 441);
+            optionsPanel.Name = "optionsPanel";
+            optionsPanel.Size = new Size(314, 117);
+            optionsPanel.TabIndex = 8;
             // 
             // ElementAmount
             // 
@@ -282,7 +282,7 @@
             // filterCrystal
             // 
             filterCrystal.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            filterCrystal.Location = new Point(1009, 80);
+            filterCrystal.Location = new Point(1009, 79);
             filterCrystal.Name = "filterCrystal";
             filterCrystal.Size = new Size(75, 35);
             filterCrystal.TabIndex = 17;
@@ -314,21 +314,21 @@
             Controls.Add(jobownerButton);
             Controls.Add(filterButton);
             Controls.Add(clearfilterButton);
-            Controls.Add(panel1);
+            Controls.Add(optionsPanel);
             Controls.Add(tabControl1);
             Controls.Add(filterbossComboBox);
             Controls.Add(jobtoggleLabel);
-            Controls.Add(label2);
+            Controls.Add(playersLabel);
             Controls.Add(jobtogglePanel);
-            Controls.Add(label1);
+            Controls.Add(bossnameLabel);
             Controls.Add(playertogglePanel);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(1117, 2160);
             MinimumSize = new Size(1117, 605);
             Name = "Form1";
             Text = "Boss Tracker";
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
+            optionsPanel.ResumeLayout(false);
+            optionsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)jobownerButton).EndInit();
             tabControl1.ResumeLayout(false);
             ResumeLayout(false);
@@ -338,9 +338,9 @@
         #endregion
         private Button filterButton;
         private Button clearfilterButton;
-        private Label label1;
-        private Label label2;
-        private Panel panel1;
+        private Label bossnameLabel;
+        private Label playersLabel;
+        private Panel optionsPanel;
         private CheckBox soloCheckBox;
         private Label label3;
         private Panel playertogglePanel;

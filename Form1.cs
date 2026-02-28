@@ -245,11 +245,33 @@ namespace Boss_Tracker
             {
                 filterCrystal.Show();
                 filterReport.Show();
+
+                filterButton.Hide();
+
+                jobtoggleLabel.Hide();
+                jobownerButton.Hide();
+                jobtogglePanel.Hide();
+
+                bossnameLabel.Hide();
+                filterbossComboBox.Hide();
+
+                optionsPanel.Hide();
             }
             else if (tabControl1.SelectedIndex == 0)
             {
                 filterCrystal.Hide();
                 filterReport.Hide();
+
+                filterButton.Show();
+
+                jobtoggleLabel.Show();
+                jobownerButton.Show();
+                jobtogglePanel.Show();
+
+                bossnameLabel.Show();
+                filterbossComboBox.Show();
+
+                optionsPanel.Show();
             }
         }
 

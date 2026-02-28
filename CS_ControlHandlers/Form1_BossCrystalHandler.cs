@@ -11,7 +11,7 @@ namespace Boss_Tracker.CS_ControlHandlers
         private readonly StringUtils _stringUtils = new StringUtils();
         private readonly BossCrystal_Prices _bossCrystal_Prices;
 
-        // panel colors
+        // colors
         Color panelColor = Color.FromArgb(224, 224, 224); // gray
         Color labelColor = Color.FromArgb(244, 244, 244); // light-gray
 
@@ -103,6 +103,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Height = 25,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
+                BackColor = labelColor,
                 BackgroundImage = Resources.ResourceManager.GetObject("MesoGold") as Image,
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
@@ -127,6 +128,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Height = 25,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
+                BackColor = labelColor,
                 BackgroundImage = Resources.ResourceManager.GetObject("MesoGrey") as Image,
                 BackgroundImageLayout = ImageLayout.Stretch,
             };

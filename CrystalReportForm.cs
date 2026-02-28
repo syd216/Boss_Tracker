@@ -20,6 +20,10 @@ namespace Boss_Tracker
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
         private Font fontStyle = new Font("Segoe UI", 9);
 
+        // colors
+        Color panelColor = Color.FromArgb(224, 224, 224); // gray
+        Color labelColor = Color.FromArgb(244, 244, 244); // light-gray
+
         public CrystalReportForm(UIState_BossCrystal UI_BC, AppServices AS)
         {
             InitializeComponent();
@@ -66,6 +70,7 @@ namespace Boss_Tracker
         private Panel CreatePanel(String player, String job)
         {
             int panelWidth = 300;
+            int panelHeight = 290;
             int elementWidth = panelWidth - 2;
 
             int labelHeight = 25;
@@ -74,11 +79,12 @@ namespace Boss_Tracker
             {
                 Margin = new Padding(3),
                 Width = panelWidth,
-                Height = 480,
+                Height = panelHeight,
                 Location = new Point(3, 3),
                 BorderStyle = BorderStyle.FixedSingle, 
                 FlowDirection = FlowDirection.LeftToRight,
                 WrapContents = true,
+                BackColor = panelColor,
                 Padding = Padding.Empty
             };
 
@@ -91,6 +97,7 @@ namespace Boss_Tracker
                 Height = labelHeight,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Margin = Padding.Empty,
+                BackColor = labelColor,
                 Font = fontStyleBold
             };
 
@@ -104,6 +111,7 @@ namespace Boss_Tracker
                 Height = labelHeight,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Margin = Margin = new Padding(0, labelHeight, 0, 0),
+                BackColor = labelColor,
                 Font = fontStyleBold
             };
 
@@ -115,6 +123,7 @@ namespace Boss_Tracker
                 Margin = Padding.Empty,
                 BackgroundImage = Resources.ResourceManager.GetObject("MesoGold") as Image,
                 BackgroundImageLayout = ImageLayout.Stretch,
+                BackColor = labelColor,
             };
 
             Label weeklyMesoLabel = new Label()
@@ -126,6 +135,7 @@ namespace Boss_Tracker
                 Height = labelHeight,
                 TextAlign = ContentAlignment.MiddleRight,
                 Margin = Padding.Empty,
+                BackColor = labelColor,
                 Font = fontStyle
             };
 
@@ -166,6 +176,7 @@ namespace Boss_Tracker
                 Height = labelHeight,
                 TextAlign = ContentAlignment.MiddleCenter,
                 Margin = Margin = new Padding(0, labelHeight, 0, 0),
+                BackColor = labelColor,
                 Font = fontStyleBold
             };
 
@@ -176,6 +187,7 @@ namespace Boss_Tracker
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = Padding.Empty,
                 BackgroundImage = Resources.ResourceManager.GetObject("MesoGold") as Image,
+                BackColor = labelColor,
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
 
@@ -188,6 +200,7 @@ namespace Boss_Tracker
                 Height = labelHeight,
                 TextAlign = ContentAlignment.MiddleRight,
                 Margin = Padding.Empty,
+                BackColor = labelColor,
                 Font = fontStyle
             };
             

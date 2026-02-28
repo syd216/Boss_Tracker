@@ -40,7 +40,7 @@
             CrystalFlowPanel.Margin = new Padding(0);
             CrystalFlowPanel.Name = "CrystalFlowPanel";
             CrystalFlowPanel.RightToLeft = RightToLeft.No;
-            CrystalFlowPanel.Size = new Size(918, 503);
+            CrystalFlowPanel.Size = new Size(918, 317);
             CrystalFlowPanel.TabIndex = 0;
             CrystalFlowPanel.WrapContents = false;
             // 
@@ -48,7 +48,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(918, 503);
+            ClientSize = new Size(918, 317);
             Controls.Add(CrystalFlowPanel);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
