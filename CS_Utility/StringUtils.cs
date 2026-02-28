@@ -4,13 +4,13 @@
     {
         public string[] TrimStringArrayEnd(string t)
         {
-            string[] cleanedplayerLBLText = t
+            string[] cleanedPlayerText = t
                 .Split(" ")
                 .Select(name => name.Trim())
                 .Where(name => !string.IsNullOrEmpty(name))
                 .ToArray();
 
-            return cleanedplayerLBLText;
+            return cleanedPlayerText;
         }
     }
 }

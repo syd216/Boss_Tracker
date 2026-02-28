@@ -1,16 +1,17 @@
-﻿using Boss_Tracker.CS_States;
+﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
 
 namespace Boss_Tracker.CS_ControlHandlers
 {
-    public class Form1_ControlHandler
+    public class Form1_BossPartyHandler
     {
-        private readonly FilterState _filterState;
+        private readonly BossPanel_FilterState _filterState;
         private readonly SaveToFile _saveToFile;
         private readonly string _filePathBTT = "";
 
-        public Form1_ControlHandler(FilterState filterState, string filePathBTT) 
+        public Form1_BossPartyHandler(BossPanel_FilterState filterState, string filePathBTT) 
         {
             _filterState = filterState;
             _saveToFile = new SaveToFile(); 
@@ -181,7 +182,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             Panel panel = new Panel
             {
                 Width = 730,
-                Height = 102,
+                Height = 77,
                 BackColor = panelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5)
@@ -207,24 +208,31 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             PictureBox bossPictureBox = new PictureBox
             {
-                Width = 66,
-                Height = 67,
+                Width = panel.Height,
+                Height = panel.Height,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
-                Image = Resources.ResourceManager.GetObject(boss) as Image
+                BackgroundImage = Resources.ResourceManager.GetObject(boss) as Image,
+                BackgroundImageLayout = ImageLayout.Stretch,
             };
+
+            int xOffset = bossPictureBox.Width + 1;
+
+            int labelPlayerAmount = 0;
+            if (splitPlayers.Length - 1 > 0) { labelPlayerAmount = players.Split().Length - 1; }
+            else { labelPlayerAmount = 1; }
 
             Label bossLabel = new Label
             {
                 Name = "bossLabel",
-                Text = $"{boss} ({difficulty}) | {partyType} | [{players.Split().Length - 1}]",
+                Text = $"{boss} ({difficulty}) | {partyType} | [{labelPlayerAmount}]",
                 Width = 300, // set width dependant on if player count over 3
                 Height = 25, 
                 TextAlign = ContentAlignment.MiddleLeft,
                 BackColor = labelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
-                Location = new Point(67, 0),
+                Location = new Point(xOffset, 0),
                 Font = fontStyleBold
             };
 
@@ -238,9 +246,11 @@ namespace Boss_Tracker.CS_ControlHandlers
                 TextAlign = ContentAlignment.MiddleLeft,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
-                Location = new Point(67, 75),
-                Font = fontStyle
+                Location = new Point(xOffset, 75),
+                Font = fontStyle,
             };
+
+            partyIDLabel.Hide(); // hide after creating. Only used for debugging
 
             // if the amount of players is over 3 (-1 for white space inclusion), extend the width of the boss label
             // by a 1/3rd of the size against a multiplier (since each player label is 1/3rd the size of the boss label)
@@ -250,37 +260,6 @@ namespace Boss_Tracker.CS_ControlHandlers
                 bossLabel.Width += (bossLabel.Width / 3) * widthMultiplier;
                 partyIDLabel.Width = bossLabel.Width; // also a long label that matches the boss label width
             }
-
-            // needs to be converted to an array or list later to properly hold player values *********************
-            // instead of using a label as a container for variables                          *********************
-            // this and jobsLabel will be hidden as they are more code-functional rather than visual
-            Label playersLabel = new Label
-            {
-                Name = "playersLabel",
-                Text = players,
-                Width = 300,
-                Height = 25,
-                BackColor = labelColor,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(5),
-                Location = new Point(67, 25),
-                Font = fontStyle,
-                Visible = false
-            };
-
-            Label jobsLabel = new Label
-            {
-                Name = "jobsLabel",
-                Text = jobs,
-                Width = 300,
-                Height = 25,
-                BackColor = labelColor,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(5),
-                Location = new Point(67, 50),
-                Font = fontStyle,
-                Visible = false
-            };
 
             // FOR LOOPS FOR MAKING THE VISUAL LABELS----------------------------------------------------------------
             for (int i = 0; i < splitPlayers.Length - 1; i++) // need to -1 the length because the tail end is empty data: " "
@@ -297,13 +276,13 @@ namespace Boss_Tracker.CS_ControlHandlers
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(67 + (100 * i), 25), 
+                    Location = new Point(xOffset + (100 * i), 25), 
                 };
 
                 if (splitPlayers.Length - 1 < 3) // less than 3 players
                 {
                     visualPlayerLabel.Width = bossLabel.Width / 2; ;
-                    visualPlayerLabel.Location = new Point(67 + (bossLabel.Width / 2 * i), 25);
+                    visualPlayerLabel.Location = new Point(xOffset + (bossLabel.Width / 2 * i), 25);
                 }
 
                 panel.Controls.Add(visualPlayerLabel); 
@@ -321,13 +300,13 @@ namespace Boss_Tracker.CS_ControlHandlers
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(67 + (100 * i), 50),
+                    Location = new Point(xOffset + (100 * i), 50),
                 };
 
                 if (splitPlayers.Length - 1 < 3) // less than 3 players
                 {
                     visualJobsLabel.Width = bossLabel.Width / 2;
-                    visualJobsLabel.Location = new Point(67 + (bossLabel.Width / 2 * i), 50);
+                    visualJobsLabel.Location = new Point(xOffset + (bossLabel.Width / 2 * i), 50);
                 }
 
                 panel.Controls.Add(visualJobsLabel);
@@ -338,7 +317,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             {
                 Label visualPlayerLabel = new Label
                 {
-                    Name = $"visualPlayerLabel",
+                    Name = "visualPlayerLabel",
                     Text = players,
                     Width = bossLabel.Width,
                     Height = 25,
@@ -346,12 +325,12 @@ namespace Boss_Tracker.CS_ControlHandlers
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(67, 25),
+                    Location = new Point(xOffset, 25),
                 };
 
                 Label visualJobsLabel = new Label
                 {
-                    Name = $"visualJobLabel",
+                    Name = "visualJobLabel",
                     Text = jobs,
                     Width = bossLabel.Width,
                     Height = 25,
@@ -359,7 +338,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(67, 50),
+                    Location = new Point(xOffset, 50),
                 };
 
                 panel.Controls.Add(visualPlayerLabel);
@@ -392,9 +371,19 @@ namespace Boss_Tracker.CS_ControlHandlers
             panel.Controls.Add(bossPictureBox);
             panel.Controls.Add(bossLabel);
             panel.Controls.Add(partyIDLabel);
-            panel.Controls.Add(playersLabel);
-            panel.Controls.Add(jobsLabel);
             panel.Controls.Add(clearButton);
+
+            // add players related to the current panel and add to a helper class to contain them
+            BossPanelContext bpc = new BossPanelContext
+            {
+                BossName = boss,
+                BossPanelPlayers = players,
+                BossPanelJobs = jobs,
+                ClearButton = clearButton
+            };
+
+            // add the modified context helper to the tag for future retrieval by the sorter
+            panel.Tag = bpc;
 
             return panel;
         }

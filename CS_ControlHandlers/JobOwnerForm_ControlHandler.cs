@@ -13,7 +13,7 @@ namespace Boss_Tracker.CS_ControlHandlers
         Color btnColorGreen = Color.LightGreen;
         Color btnColorRed = Color.IndianRed;
 
-        public JobOwnerForm_ControlHandler(FilterState filterState) 
+        public JobOwnerForm_ControlHandler(BossPanel_FilterState filterState) 
         { 
             _jobOwnersActive = filterState.JobOwnersActive;
             _jobOwnersExcluded = filterState.JobOwnersExcluded;

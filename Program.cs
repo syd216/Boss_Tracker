@@ -8,21 +8,23 @@ namespace Boss_Tracker
     {
         static readonly CSVDownloader _csvDownloader = new CSVDownloader();
 
-        // names for the file
+        // names for the files
         static readonly string bossTradeTrackerName = "BossTradeTracker.csv";
         static readonly string charactersName = "Characters.csv";
+        static readonly string bossesName = "Bosses.csv";
         static readonly string configName = "config.json";
 
         // key value names
         static readonly string configBTTKey = "bossTradeTrackerPath";
         static readonly string configCharactersKey = "charactersPath";
+        static readonly string configBossesKey = "bossesPath";
 
         static string configFile = "";
         static Dictionary<string, string>? configDict;
 
-        /*[DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();*/
+        static extern bool AllocConsole();
 
         /// <summary>
         ///  The main entry point for the application.
@@ -30,7 +32,7 @@ namespace Boss_Tracker
         [STAThread]
         static async Task Main()
         {
-            //AllocConsole();
+            AllocConsole();
 
             bool canRun = true;
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
@@ -81,6 +83,12 @@ namespace Boss_Tracker
                             canRun = false;
                             MessageBox.Show($"{configCharactersKey} is empty. Please edit the config.json", "Notice");
                         }
+
+                        if (configDict[configBossesKey] == "")
+                        {
+                            canRun = false;
+                            MessageBox.Show($"{configBossesKey} is empty. Please edit the config.json", "Notice");
+                        }
                     }
                     else { MessageBox.Show("Did not reach expected element amounts in dictionary. Please fix/delete the config.json to reset this", "Notice"); }
                 }
@@ -94,6 +102,7 @@ namespace Boss_Tracker
                 // will also be used to pass into Form1 (if successful)
                 string BTTPath = Path.Combine(baseDirectory, bossTradeTrackerName);
                 string CharactersPath = Path.Combine(baseDirectory, charactersName);
+                string BossesPath = Path.Combine(baseDirectory, bossesName);
 
                 try
                 {
@@ -106,11 +115,16 @@ namespace Boss_Tracker
                     {
                         await _csvDownloader.Download(configDict[configCharactersKey], "Characters.csv");
                     }
+
+                    if (!File.Exists(BossesPath))
+                    {
+                        await _csvDownloader.Download(configDict[configBossesKey], "Bosses.csv");
+                    }
                 }
                 catch (Exception e) { MessageBox.Show($"Download failed: {e}", "Notice"); Application.Exit(); }
 
                 ApplicationConfiguration.Initialize();
-                Application.Run(new Form1(BTTPath, CharactersPath, configDict));
+                Application.Run(new Form1(BTTPath, CharactersPath, BossesPath, configDict));
             }
             else { Application.Exit(); }
         }

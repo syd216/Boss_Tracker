@@ -1,10 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Net.Http;
-using System.Security.Policy;
-using System.Threading.Tasks;
-
-namespace Boss_Tracker.CS_Services
+﻿namespace Boss_Tracker.CS_Services
 {
     public class CSVDownloader
     {
