@@ -2,8 +2,6 @@
 using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 
-// fix exclude list (ex: exlcuding NL but including all of zak's jobs and blaster shows nothing)
-
 namespace Boss_Tracker.CS_Services
 {
     public class BossPanel_FilterHandler
@@ -34,7 +32,7 @@ namespace Boss_Tracker.CS_Services
                     boss_string = bpc.BossName;
                     players_string = bpc.BossPanelPlayers;
                     jobs_string = bpc.BossPanelJobs;
-                    
+
                     if (bpc.ClearButton.Text == "Unclear") { cleared = true; }
                 }
 
@@ -74,7 +72,6 @@ namespace Boss_Tracker.CS_Services
 
                 if (!boss_string.Contains(fbTBText))
                 {
-                    Console.WriteLine("YUP");
                     isValid = false;
                 }
 
@@ -113,9 +110,9 @@ namespace Boss_Tracker.CS_Services
                 {
                     uiFilterOptions.ExcludeSoloCheckBox.Checked = false; // make sure exclude solo is unchecked
 
-                    if (boss_string.Contains("Solo"))
+                    if (cleanedPlayerList.Length == 1)
                     {
-                        Console.WriteLine("HERE");
+                        // if any players are selected in the filter, make sure to check each solo entry for them
                         if (boss_string.Contains(fbTBText) && filterState.ActivePlayers.Count > 0)
                         {
                             if (!filterState.ActivePlayers.Contains(players_string)) { isValid = false; }
@@ -124,7 +121,7 @@ namespace Boss_Tracker.CS_Services
                     else { isValid = false; }
                 }
 
-                if (isValid) { uiState.filteredPanelList.Add(p);  }
+                if (isValid) { uiState.filteredPanelList.Add(p); }
             }
 
             // HIDE AND REVEAL FILTERED PANEL LIST DEPENDING IF ANY PANELS EXIST IN THAT LIS

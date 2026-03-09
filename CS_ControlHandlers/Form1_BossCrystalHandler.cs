@@ -66,9 +66,7 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             int xOffset = bossPictureBox.Width + 1;
 
-            int labelPlayerAmount = 0;
-            if (splitPlayers.Length - 1 > 0) { labelPlayerAmount = players.Split().Length - 1; }
-            else { labelPlayerAmount = 1; }
+            int labelPlayerAmount = splitPlayers.Length;
 
             Label bossLabel = new Label
             {

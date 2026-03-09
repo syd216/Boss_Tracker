@@ -49,7 +49,8 @@ namespace Boss_Tracker
                 Dictionary<string, string> jsonDefaultDict = new Dictionary<string, string>
                 {
                     { configBTTKey,"SheetsURL" },
-                    { configCharactersKey,"SheetsURL" }
+                    { configCharactersKey,"SheetsURL" },
+                    { configBossesKey,"SheetsURL" }
                 };
 
                 // more human readable
