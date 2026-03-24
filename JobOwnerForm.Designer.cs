@@ -44,8 +44,7 @@
             // 
             // JobOwnerForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(648, 273);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.FixedSingle;

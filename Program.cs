@@ -26,13 +26,11 @@ namespace Boss_Tracker
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
 
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        // the main entry point for the application
         [STAThread]
         static async Task Main()
         {
-            AllocConsole();
+            // AllocConsole();
 
             bool canRun = true;
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
