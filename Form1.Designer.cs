@@ -35,9 +35,10 @@
             bossnameLabel = new Label();
             playersLabel = new Label();
             optionsPanel = new Panel();
-            ElementAmount = new TextBox();
-            ExcludeClearsButton = new CheckBox();
             DownloadButton = new Button();
+            updateCheckBox = new CheckBox();
+            ElementAmount = new TextBox();
+            excludeClearsCheckBox = new CheckBox();
             excludeSoloCheckBox = new CheckBox();
             soloCheckBox = new CheckBox();
             label3 = new Label();
@@ -106,52 +107,69 @@
             // 
             // optionsPanel
             // 
+            optionsPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             optionsPanel.BorderStyle = BorderStyle.FixedSingle;
-            optionsPanel.Controls.Add(ElementAmount);
-            optionsPanel.Controls.Add(ExcludeClearsButton);
             optionsPanel.Controls.Add(DownloadButton);
+            optionsPanel.Controls.Add(updateCheckBox);
+            optionsPanel.Controls.Add(ElementAmount);
+            optionsPanel.Controls.Add(excludeClearsCheckBox);
             optionsPanel.Controls.Add(excludeSoloCheckBox);
             optionsPanel.Controls.Add(soloCheckBox);
             optionsPanel.Controls.Add(label3);
             optionsPanel.Font = new Font("UD Digi Kyokasho N-B", 9F, FontStyle.Bold);
-            optionsPanel.Location = new Point(778, 441);
+            optionsPanel.Location = new Point(778, 432);
             optionsPanel.Name = "optionsPanel";
-            optionsPanel.Size = new Size(314, 117);
+            optionsPanel.Size = new Size(314, 126);
             optionsPanel.TabIndex = 8;
-            // 
-            // ElementAmount
-            // 
-            ElementAmount.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            ElementAmount.BorderStyle = BorderStyle.FixedSingle;
-            ElementAmount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ElementAmount.Location = new Point(290, 95);
-            ElementAmount.Name = "ElementAmount";
-            ElementAmount.ReadOnly = true;
-            ElementAmount.Size = new Size(23, 23);
-            ElementAmount.TabIndex = 16;
-            ElementAmount.TextAlign = HorizontalAlignment.Center;
-            // 
-            // ExcludeClearsButton
-            // 
-            ExcludeClearsButton.AutoSize = true;
-            ExcludeClearsButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            ExcludeClearsButton.Location = new Point(4, 51);
-            ExcludeClearsButton.Name = "ExcludeClearsButton";
-            ExcludeClearsButton.Size = new Size(97, 18);
-            ExcludeClearsButton.TabIndex = 15;
-            ExcludeClearsButton.Text = "Exclude Clears";
-            ExcludeClearsButton.UseVisualStyleBackColor = true;
             // 
             // DownloadButton
             // 
             DownloadButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            DownloadButton.Location = new Point(3, 89);
+            DownloadButton.Location = new Point(4, 97);
             DownloadButton.Name = "DownloadButton";
             DownloadButton.Size = new Size(152, 23);
             DownloadButton.TabIndex = 15;
             DownloadButton.Text = "Download Live CSVs";
             DownloadButton.UseVisualStyleBackColor = true;
             DownloadButton.Click += DownloadButton_Click;
+            // 
+            // updateCheckBox
+            // 
+            updateCheckBox.AutoSize = true;
+            updateCheckBox.Checked = true;
+            updateCheckBox.CheckState = CheckState.Checked;
+            updateCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
+            updateCheckBox.Location = new Point(4, 75);
+            updateCheckBox.Name = "updateCheckBox";
+            updateCheckBox.Size = new Size(116, 18);
+            updateCheckBox.TabIndex = 17;
+            updateCheckBox.Text = "Check for Updates";
+            updateCheckBox.UseVisualStyleBackColor = true;
+            updateCheckBox.CheckedChanged += UpdateCheckButton_CheckedChanged;
+            // 
+            // ElementAmount
+            // 
+            ElementAmount.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ElementAmount.BorderStyle = BorderStyle.FixedSingle;
+            ElementAmount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            ElementAmount.Location = new Point(290, 104);
+            ElementAmount.Name = "ElementAmount";
+            ElementAmount.ReadOnly = true;
+            ElementAmount.Size = new Size(23, 23);
+            ElementAmount.TabIndex = 16;
+            ElementAmount.TextAlign = HorizontalAlignment.Center;
+            // 
+            // excludeClearsCheckBox
+            // 
+            excludeClearsCheckBox.AutoSize = true;
+            excludeClearsCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
+            excludeClearsCheckBox.Location = new Point(4, 51);
+            excludeClearsCheckBox.Name = "excludeClearsCheckBox";
+            excludeClearsCheckBox.Size = new Size(97, 18);
+            excludeClearsCheckBox.TabIndex = 15;
+            excludeClearsCheckBox.Text = "Exclude Clears";
+            excludeClearsCheckBox.UseVisualStyleBackColor = true;
+            excludeClearsCheckBox.CheckedChanged += ExcludeClearsButton_CheckedChanged;
             // 
             // excludeSoloCheckBox
             // 
@@ -163,6 +181,7 @@
             excludeSoloCheckBox.TabIndex = 3;
             excludeSoloCheckBox.Text = "Exclude Solo";
             excludeSoloCheckBox.UseVisualStyleBackColor = true;
+            excludeSoloCheckBox.CheckedChanged += excludeSoloCheckBox_CheckedChanged;
             // 
             // soloCheckBox
             // 
@@ -174,6 +193,7 @@
             soloCheckBox.TabIndex = 1;
             soloCheckBox.Text = "Show Solo Only";
             soloCheckBox.UseVisualStyleBackColor = true;
+            soloCheckBox.CheckedChanged += soloCheckBox_CheckedChanged;
             // 
             // label3
             // 
@@ -305,8 +325,7 @@
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             AutoScroll = true;
             ClientSize = new Size(1101, 566);
             Controls.Add(filterReport);
@@ -349,7 +368,7 @@
         private Label jobtoggleLabel;
         private PictureBox jobownerButton;
         private Button DownloadButton;
-        private CheckBox ExcludeClearsButton;
+        private CheckBox excludeClearsCheckBox;
         private ComboBox filterbossComboBox;
         private TabControl tabControl1;
         private TabPage tabPage1;
@@ -358,5 +377,6 @@
         private Button filterCrystal;
         private TextBox ElementAmount;
         private Button filterReport;
+        private CheckBox updateCheckBox;
     }
 }

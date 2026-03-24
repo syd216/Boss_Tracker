@@ -1,6 +1,7 @@
 using Boss_Tracker.CS_ControlHandlers;
 using Boss_Tracker.CS_Services;
 using Boss_Tracker.CS_States;
+using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
 using System.Diagnostics;
 
@@ -48,6 +49,24 @@ namespace Boss_Tracker
         {
             InitializeComponent();
 
+            // initialize check boxes if settings exists
+            if (File.Exists("settings"))
+            {
+                string settings = File.ReadAllText("settings");
+
+                Console.WriteLine(settings);
+
+                CheckBox[] checkBoxes = { soloCheckBox, excludeSoloCheckBox, excludeClearsCheckBox, updateCheckBox };
+
+                for (int i = 0; i < checkBoxes.Length && i < settings.Length; i++)
+                {
+                    checkBoxes[i].Checked = int.TryParse(settings[i].ToString(), out int value) && value != 0;
+                }
+            }
+
+            // check for update AFTER settings are loaded
+            if (updateCheckBox.Checked) { new UpdaterCheck().Check(); } 
+
             this.MaximizedBounds = Screen.FromControl(this).WorkingArea;
 
             // set CSVLoader and ControlHandler in constructor
@@ -64,7 +83,7 @@ namespace Boss_Tracker
                 FilterBossTextBoxText = filterbossComboBox.Text,
                 SoloCheckBox = soloCheckBox,
                 ExcludeSoloCheckBox = excludeSoloCheckBox,
-                ExcludeClearsButton = ExcludeClearsButton,
+                ExcludeClearsButton = excludeClearsCheckBox,
                 ElementAmountLabel = ElementAmount
             };
 
@@ -174,7 +193,7 @@ namespace Boss_Tracker
             // reset the state of check boxes, activePlayers list, and buttons
             soloCheckBox.Checked = false;
             excludeSoloCheckBox.Checked = false;
-            ExcludeClearsButton.Checked = false;
+            excludeClearsCheckBox.Checked = false;
 
             _bossPanel_FS.ActivePlayers.Clear();
             _bossPanel_FS.ExcludedPlayers.Clear();
@@ -305,6 +324,37 @@ namespace Boss_Tracker
                 _crystalReportForm.BringToFront();
                 _crystalReportForm.Show();
             }
+        }
+
+        private void UpdateSettings(int index, bool isChecked)
+        {
+            new SaveToFile().WriteToSettings(
+                index,
+                isChecked ? '1' : '0');
+        }
+
+        // for updating the settings file
+        private void soloCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSettings(0, soloCheckBox.Checked);
+            if (soloCheckBox.Checked) { excludeSoloCheckBox.Checked = false; }
+        }
+
+        private void excludeSoloCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSettings(1, excludeSoloCheckBox.Checked);
+            if (excludeSoloCheckBox.Checked) { soloCheckBox.Checked = false; }
+        }
+
+        private void ExcludeClearsButton_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSettings(2, excludeClearsCheckBox.Checked);
+        }
+
+        private void UpdateCheckButton_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSettings(3, updateCheckBox.Checked);
+            MessageBox.Show("Restart Boss Tracker to check for updates", "Notice");
         }
     }
 }

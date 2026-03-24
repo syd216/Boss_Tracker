@@ -46,8 +46,7 @@
             // 
             // CrystalReportForm
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(918, 317);
             Controls.Add(CrystalFlowPanel);
             FormBorderStyle = FormBorderStyle.FixedSingle;
