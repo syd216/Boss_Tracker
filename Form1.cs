@@ -25,6 +25,7 @@ namespace Boss_Tracker
         private BossPartyFactory _bossPartyFactory;
         private BossCrystalFactory _bossCrystalFactory;
         private BossCrystal_Prices _bossCrystal_Prices;
+        private CustomImageLoader _customImageLoader;
 
         // instead of adding elements directly to the control, a flowpanel is used to avoid resizing issues
         FlowLayoutPanel flowPanelBossParties = new FlowLayoutPanel()
@@ -64,6 +65,19 @@ namespace Boss_Tracker
                 }
             }
 
+            // initialize CustomImageLoader.cs
+            _customImageLoader = new CustomImageLoader();
+            _customImageLoader.LoadImagePathFromJSON();
+
+            // some custom images are loaded here if available
+            String tp1_bg = _customImageLoader.GetTabPage1Images("tabPage1BG");
+
+            if (!String.IsNullOrEmpty(tp1_bg)) 
+            { 
+                tabPage1.BackgroundImage = Image.FromFile(tp1_bg);
+                tabPage1.BackColor = Color.Transparent;
+            }
+
             // check for update AFTER settings are loaded
             if (updateCheckBox.Checked) { new UpdaterCheck().Check(); } 
 
@@ -75,7 +89,7 @@ namespace Boss_Tracker
             _uiState_BossPanel = new UIState_BossPanel();
             _bossCrystal_Prices = new BossCrystal_Prices();
             _uiState_BossCrystal = new UIState_BossCrystal();
-            _appServices = new AppServices(filePathBTT, filePathCharacters, filePathBosses, _bossPanel_FS, _bossCrystal_Prices);
+            _appServices = new AppServices(filePathBTT, filePathCharacters, filePathBosses, _customImageLoader, _bossPanel_FS, _bossCrystal_Prices);
 
             _uiFilterOptions = new UIFilterOptions // set default state of filterOptions
             {
@@ -94,12 +108,12 @@ namespace Boss_Tracker
             FirstLoad();
 
             // reposition jobtogglePanel after playertogglePanel has finished populating
-            jobtogglePanel.Location = new Point(
+            /* jobtogglePanel.Location = new Point(
                 playertogglePanel.Location.X,
                 playertogglePanel.Location.Y + playertogglePanel.Height + 13);
 
             jobtoggleLabel.Location = new Point(jobtoggleLabel.Location.X, jobtogglePanel.Location.Y);
-            jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);
+            jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);*/
 
             // add relevant flow panels to each tab page
             tabControl1.TabPages[0].Controls.Add(flowPanelBossParties);
@@ -169,6 +183,19 @@ namespace Boss_Tracker
 
             // add job toggle buttons
             foreach (string job in toggleableJobs) { _bossPartyFactory.AddJobToggle(jobtogglePanel, job, toggleableJobs.IndexOf(job)); }
+
+            // hide fake scroll bar and enable auto scroll if elements exceed 5
+            if (toggleablePlayers.Count > 5)
+            {
+                fakeBarTogglePlayer.Hide();
+                playertogglePanel.AutoScroll = true;
+            }
+
+            if (toggleableJobs.Count > 5)
+            {
+                fakeBarToggleJob.Hide();
+                jobtogglePanel.AutoScroll = true;
+            }
 
             BossPanel_SubmitFilter("group"); // this loads FilterOptions into memory
         }
@@ -274,7 +301,6 @@ namespace Boss_Tracker
                 bossnameLabel.Hide();
                 filterbossComboBox.Hide();
 
-                optionsPanel.Hide();
             }
             else if (tabControl1.SelectedIndex == 0)
             {
@@ -290,7 +316,6 @@ namespace Boss_Tracker
                 bossnameLabel.Show();
                 filterbossComboBox.Show();
 
-                optionsPanel.Show();
             }
         }
 
@@ -354,7 +379,7 @@ namespace Boss_Tracker
         private void UpdateCheckButton_CheckedChanged(object sender, EventArgs e)
         {
             UpdateSettings(3, updateCheckBox.Checked);
-            MessageBox.Show("Restart Boss Tracker to check for updates", "Notice");
+            if (updateCheckBox.Checked) { MessageBox.Show("Restart Boss Tracker to check for updates", "Notice"); }
         }
     }
 }

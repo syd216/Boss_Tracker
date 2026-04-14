@@ -30,7 +30,7 @@ namespace Boss_Tracker
         [STAThread]
         static async Task Main()
         {
-            // AllocConsole();
+            AllocConsole();
 
             bool canRun = true;
             string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;

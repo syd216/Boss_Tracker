@@ -28,34 +28,37 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             filterButton = new Button();
             clearfilterButton = new Button();
             bossnameLabel = new Label();
             playersLabel = new Label();
-            optionsPanel = new Panel();
-            DownloadButton = new Button();
+            filterCrystal = new Button();
+            filterReport = new Button();
             updateCheckBox = new CheckBox();
             ElementAmount = new TextBox();
             excludeClearsCheckBox = new CheckBox();
             excludeSoloCheckBox = new CheckBox();
             soloCheckBox = new CheckBox();
-            label3 = new Label();
-            playertogglePanel = new Panel();
-            jobtogglePanel = new Panel();
+            DownloadButton = new Button();
+            jobtogglePanel = new SmoothScrollPanel();
+            fakeBarToggleJob = new PictureBox();
             jobtoggleLabel = new Label();
             jobownerButton = new PictureBox();
             filterbossComboBox = new ComboBox();
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
-            imageList1 = new ImageList(components);
-            filterCrystal = new Button();
-            filterReport = new Button();
-            optionsPanel.SuspendLayout();
+            pictureBox1 = new PictureBox();
+            playertogglePanel = new SmoothScrollPanel();
+            fakeBarTogglePlayer = new PictureBox();
+            jobtogglePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fakeBarToggleJob).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobownerButton).BeginInit();
             tabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            playertogglePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)fakeBarTogglePlayer).BeginInit();
             SuspendLayout();
             // 
             // filterButton
@@ -63,7 +66,7 @@
             filterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterButton.BackColor = SystemColors.ControlLightLight;
             filterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            filterButton.Location = new Point(1009, 19);
+            filterButton.Location = new Point(1010, 31);
             filterButton.Name = "filterButton";
             filterButton.Size = new Size(75, 23);
             filterButton.TabIndex = 1;
@@ -75,7 +78,7 @@
             // 
             clearfilterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             clearfilterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            clearfilterButton.Location = new Point(1009, 49);
+            clearfilterButton.Location = new Point(1010, 456);
             clearfilterButton.Name = "clearfilterButton";
             clearfilterButton.Size = new Size(75, 23);
             clearfilterButton.TabIndex = 3;
@@ -87,8 +90,9 @@
             // 
             bossnameLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             bossnameLabel.AutoSize = true;
+            bossnameLabel.BackColor = Color.White;
             bossnameLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            bossnameLabel.Location = new Point(785, 25);
+            bossnameLabel.Location = new Point(788, 35);
             bossnameLabel.Name = "bossnameLabel";
             bossnameLabel.Size = new Size(63, 14);
             bossnameLabel.TabIndex = 5;
@@ -98,140 +102,144 @@
             // 
             playersLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             playersLabel.AutoSize = true;
+            playersLabel.BackColor = Color.White;
             playersLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            playersLabel.Location = new Point(786, 53);
+            playersLabel.Location = new Point(788, 71);
             playersLabel.Name = "playersLabel";
             playersLabel.Size = new Size(43, 14);
             playersLabel.TabIndex = 6;
             playersLabel.Text = "Players";
             // 
-            // optionsPanel
+            // filterCrystal
             // 
-            optionsPanel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            optionsPanel.BorderStyle = BorderStyle.FixedSingle;
-            optionsPanel.Controls.Add(DownloadButton);
-            optionsPanel.Controls.Add(updateCheckBox);
-            optionsPanel.Controls.Add(ElementAmount);
-            optionsPanel.Controls.Add(excludeClearsCheckBox);
-            optionsPanel.Controls.Add(excludeSoloCheckBox);
-            optionsPanel.Controls.Add(soloCheckBox);
-            optionsPanel.Controls.Add(label3);
-            optionsPanel.Font = new Font("UD Digi Kyokasho N-B", 9F, FontStyle.Bold);
-            optionsPanel.Location = new Point(778, 432);
-            optionsPanel.Name = "optionsPanel";
-            optionsPanel.Size = new Size(314, 126);
-            optionsPanel.TabIndex = 8;
+            filterCrystal.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            filterCrystal.Location = new Point(788, 497);
+            filterCrystal.Name = "filterCrystal";
+            filterCrystal.Size = new Size(75, 35);
+            filterCrystal.TabIndex = 17;
+            filterCrystal.Text = "Crystal Filter";
+            filterCrystal.UseVisualStyleBackColor = true;
+            filterCrystal.Visible = false;
+            filterCrystal.Click += filterCrystal_Click;
             // 
-            // DownloadButton
+            // filterReport
             // 
-            DownloadButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            DownloadButton.Location = new Point(4, 97);
-            DownloadButton.Name = "DownloadButton";
-            DownloadButton.Size = new Size(152, 23);
-            DownloadButton.TabIndex = 15;
-            DownloadButton.Text = "Download Live CSVs";
-            DownloadButton.UseVisualStyleBackColor = true;
-            DownloadButton.Click += DownloadButton_Click;
+            filterReport.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            filterReport.Location = new Point(788, 456);
+            filterReport.Name = "filterReport";
+            filterReport.Size = new Size(75, 35);
+            filterReport.TabIndex = 18;
+            filterReport.Text = "Crystal Report";
+            filterReport.UseVisualStyleBackColor = true;
+            filterReport.Visible = false;
+            filterReport.Click += filterReport_Click;
             // 
             // updateCheckBox
             // 
             updateCheckBox.AutoSize = true;
+            updateCheckBox.BackColor = SystemColors.Window;
             updateCheckBox.Checked = true;
             updateCheckBox.CheckState = CheckState.Checked;
             updateCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            updateCheckBox.Location = new Point(4, 75);
+            updateCheckBox.Location = new Point(788, 391);
             updateCheckBox.Name = "updateCheckBox";
             updateCheckBox.Size = new Size(116, 18);
             updateCheckBox.TabIndex = 17;
             updateCheckBox.Text = "Check for Updates";
-            updateCheckBox.UseVisualStyleBackColor = true;
+            updateCheckBox.UseVisualStyleBackColor = false;
             updateCheckBox.CheckedChanged += UpdateCheckButton_CheckedChanged;
             // 
             // ElementAmount
             // 
             ElementAmount.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            ElementAmount.BorderStyle = BorderStyle.FixedSingle;
+            ElementAmount.BackColor = SystemColors.Window;
+            ElementAmount.BorderStyle = BorderStyle.None;
             ElementAmount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ElementAmount.Location = new Point(290, 104);
+            ElementAmount.Location = new Point(1069, 542);
             ElementAmount.Name = "ElementAmount";
             ElementAmount.ReadOnly = true;
-            ElementAmount.Size = new Size(23, 23);
+            ElementAmount.Size = new Size(21, 16);
             ElementAmount.TabIndex = 16;
+            ElementAmount.Text = "70";
             ElementAmount.TextAlign = HorizontalAlignment.Center;
             // 
             // excludeClearsCheckBox
             // 
             excludeClearsCheckBox.AutoSize = true;
+            excludeClearsCheckBox.BackColor = SystemColors.Window;
             excludeClearsCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            excludeClearsCheckBox.Location = new Point(4, 51);
+            excludeClearsCheckBox.Location = new Point(788, 367);
             excludeClearsCheckBox.Name = "excludeClearsCheckBox";
             excludeClearsCheckBox.Size = new Size(97, 18);
             excludeClearsCheckBox.TabIndex = 15;
             excludeClearsCheckBox.Text = "Exclude Clears";
-            excludeClearsCheckBox.UseVisualStyleBackColor = true;
+            excludeClearsCheckBox.UseVisualStyleBackColor = false;
             excludeClearsCheckBox.CheckedChanged += ExcludeClearsButton_CheckedChanged;
             // 
             // excludeSoloCheckBox
             // 
             excludeSoloCheckBox.AutoSize = true;
+            excludeSoloCheckBox.BackColor = SystemColors.Window;
             excludeSoloCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            excludeSoloCheckBox.Location = new Point(4, 27);
+            excludeSoloCheckBox.Location = new Point(788, 343);
             excludeSoloCheckBox.Name = "excludeSoloCheckBox";
             excludeSoloCheckBox.Size = new Size(88, 18);
             excludeSoloCheckBox.TabIndex = 3;
             excludeSoloCheckBox.Text = "Exclude Solo";
-            excludeSoloCheckBox.UseVisualStyleBackColor = true;
+            excludeSoloCheckBox.UseVisualStyleBackColor = false;
             excludeSoloCheckBox.CheckedChanged += excludeSoloCheckBox_CheckedChanged;
             // 
             // soloCheckBox
             // 
             soloCheckBox.AutoSize = true;
+            soloCheckBox.BackColor = SystemColors.Window;
             soloCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            soloCheckBox.Location = new Point(4, 3);
+            soloCheckBox.Location = new Point(788, 319);
             soloCheckBox.Name = "soloCheckBox";
             soloCheckBox.Size = new Size(103, 18);
             soloCheckBox.TabIndex = 1;
             soloCheckBox.Text = "Show Solo Only";
-            soloCheckBox.UseVisualStyleBackColor = true;
+            soloCheckBox.UseVisualStyleBackColor = false;
             soloCheckBox.CheckedChanged += soloCheckBox_CheckedChanged;
             // 
-            // label3
+            // DownloadButton
             // 
-            label3.AutoSize = true;
-            label3.BorderStyle = BorderStyle.FixedSingle;
-            label3.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            label3.Location = new Point(264, -1);
-            label3.Name = "label3";
-            label3.Size = new Size(49, 16);
-            label3.TabIndex = 0;
-            label3.Text = "Settings";
-            // 
-            // playertogglePanel
-            // 
-            playertogglePanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            playertogglePanel.AutoSize = true;
-            playertogglePanel.BorderStyle = BorderStyle.FixedSingle;
-            playertogglePanel.Location = new Point(853, 50);
-            playertogglePanel.Name = "playertogglePanel";
-            playertogglePanel.Size = new Size(139, 21);
-            playertogglePanel.TabIndex = 11;
+            DownloadButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
+            DownloadButton.Location = new Point(858, 422);
+            DownloadButton.Name = "DownloadButton";
+            DownloadButton.Size = new Size(139, 23);
+            DownloadButton.TabIndex = 15;
+            DownloadButton.Text = "Download Live CSVs";
+            DownloadButton.UseVisualStyleBackColor = true;
+            DownloadButton.Click += DownloadButton_Click;
             // 
             // jobtogglePanel
             // 
-            jobtogglePanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            jobtogglePanel.AutoSize = true;
+            jobtogglePanel.BackColor = SystemColors.Window;
             jobtogglePanel.BorderStyle = BorderStyle.FixedSingle;
-            jobtogglePanel.Location = new Point(853, 77);
+            jobtogglePanel.Controls.Add(fakeBarToggleJob);
+            jobtogglePanel.Location = new Point(858, 193);
             jobtogglePanel.Name = "jobtogglePanel";
-            jobtogglePanel.Size = new Size(139, 21);
+            jobtogglePanel.Size = new Size(221, 113);
             jobtogglePanel.TabIndex = 13;
+            // 
+            // fakeBarToggleJob
+            // 
+            fakeBarToggleJob.BackgroundImage = Properties.Resources.FakeBar_;
+            fakeBarToggleJob.BackgroundImageLayout = ImageLayout.Stretch;
+            fakeBarToggleJob.Location = new Point(202, -2);
+            fakeBarToggleJob.Name = "fakeBarToggleJob";
+            fakeBarToggleJob.Size = new Size(18, 114);
+            fakeBarToggleJob.TabIndex = 1;
+            fakeBarToggleJob.TabStop = false;
             // 
             // jobtoggleLabel
             // 
             jobtoggleLabel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             jobtoggleLabel.AutoSize = true;
+            jobtoggleLabel.BackColor = Color.White;
             jobtoggleLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            jobtoggleLabel.Location = new Point(786, 81);
+            jobtoggleLabel.Location = new Point(788, 196);
             jobtoggleLabel.Name = "jobtoggleLabel";
             jobtoggleLabel.Size = new Size(28, 14);
             jobtoggleLabel.TabIndex = 12;
@@ -242,7 +250,7 @@
             jobownerButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             jobownerButton.BorderStyle = BorderStyle.FixedSingle;
             jobownerButton.Image = Properties.Resources.Gear;
-            jobownerButton.Location = new Point(827, 77);
+            jobownerButton.Location = new Point(830, 193);
             jobownerButton.Name = "jobownerButton";
             jobownerButton.Size = new Size(21, 21);
             jobownerButton.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -256,7 +264,7 @@
             // 
             filterbossComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterbossComboBox.FormattingEnabled = true;
-            filterbossComboBox.Location = new Point(853, 21);
+            filterbossComboBox.Location = new Point(858, 31);
             filterbossComboBox.Name = "filterbossComboBox";
             filterbossComboBox.Size = new Size(139, 23);
             filterbossComboBox.TabIndex = 15;
@@ -275,81 +283,92 @@
             // 
             // tabPage1
             // 
+            tabPage1.BackColor = Color.White;
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
             tabPage1.Size = new Size(763, 538);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Boss Parties";
-            tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
+            tabPage2.BackColor = Color.White;
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
             tabPage2.Size = new Size(763, 538);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Boss Crystals";
-            tabPage2.UseVisualStyleBackColor = true;
             // 
-            // imageList1
+            // pictureBox1
             // 
-            imageList1.ColorDepth = ColorDepth.Depth32Bit;
-            imageList1.ImageSize = new Size(16, 16);
-            imageList1.TransparentColor = Color.Transparent;
+            pictureBox1.BackgroundImage = Properties.Resources.RightPane;
+            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox1.Location = new Point(776, 21);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(318, 541);
+            pictureBox1.TabIndex = 19;
+            pictureBox1.TabStop = false;
             // 
-            // filterCrystal
+            // playertogglePanel
             // 
-            filterCrystal.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            filterCrystal.Location = new Point(1009, 79);
-            filterCrystal.Name = "filterCrystal";
-            filterCrystal.Size = new Size(75, 35);
-            filterCrystal.TabIndex = 17;
-            filterCrystal.Text = "Crystal Filter";
-            filterCrystal.UseVisualStyleBackColor = true;
-            filterCrystal.Visible = false;
-            filterCrystal.Click += filterCrystal_Click;
+            playertogglePanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            playertogglePanel.BackColor = SystemColors.Window;
+            playertogglePanel.BorderStyle = BorderStyle.FixedSingle;
+            playertogglePanel.Controls.Add(fakeBarTogglePlayer);
+            playertogglePanel.Location = new Point(858, 71);
+            playertogglePanel.Name = "playertogglePanel";
+            playertogglePanel.Size = new Size(221, 113);
+            playertogglePanel.TabIndex = 11;
             // 
-            // filterReport
+            // fakeBarTogglePlayer
             // 
-            filterReport.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            filterReport.Location = new Point(1009, 121);
-            filterReport.Name = "filterReport";
-            filterReport.Size = new Size(75, 35);
-            filterReport.TabIndex = 18;
-            filterReport.Text = "Crystal Report";
-            filterReport.UseVisualStyleBackColor = true;
-            filterReport.Visible = false;
-            filterReport.Click += filterReport_Click;
+            fakeBarTogglePlayer.BackgroundImage = Properties.Resources.FakeBar_;
+            fakeBarTogglePlayer.BackgroundImageLayout = ImageLayout.Stretch;
+            fakeBarTogglePlayer.Location = new Point(202, -1);
+            fakeBarTogglePlayer.Name = "fakeBarTogglePlayer";
+            fakeBarTogglePlayer.Size = new Size(18, 113);
+            fakeBarTogglePlayer.TabIndex = 2;
+            fakeBarTogglePlayer.TabStop = false;
             // 
             // Form1
             // 
             AutoScaleMode = AutoScaleMode.None;
             AutoScroll = true;
+            BackColor = SystemColors.ControlLight;
             ClientSize = new Size(1101, 566);
-            Controls.Add(filterReport);
             Controls.Add(filterCrystal);
-            Controls.Add(jobownerButton);
-            Controls.Add(filterButton);
-            Controls.Add(clearfilterButton);
-            Controls.Add(optionsPanel);
-            Controls.Add(tabControl1);
-            Controls.Add(filterbossComboBox);
-            Controls.Add(jobtoggleLabel);
-            Controls.Add(playersLabel);
             Controls.Add(jobtogglePanel);
-            Controls.Add(bossnameLabel);
+            Controls.Add(filterReport);
             Controls.Add(playertogglePanel);
+            Controls.Add(clearfilterButton);
+            Controls.Add(ElementAmount);
+            Controls.Add(updateCheckBox);
+            Controls.Add(DownloadButton);
+            Controls.Add(jobownerButton);
+            Controls.Add(tabControl1);
+            Controls.Add(excludeClearsCheckBox);
+            Controls.Add(filterbossComboBox);
+            Controls.Add(excludeSoloCheckBox);
+            Controls.Add(jobtoggleLabel);
+            Controls.Add(soloCheckBox);
+            Controls.Add(playersLabel);
+            Controls.Add(filterButton);
+            Controls.Add(bossnameLabel);
+            Controls.Add(pictureBox1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(1117, 2160);
             MinimumSize = new Size(1117, 605);
             Name = "Form1";
             Text = "Boss Tracker";
-            optionsPanel.ResumeLayout(false);
-            optionsPanel.PerformLayout();
+            jobtogglePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)fakeBarToggleJob).EndInit();
             ((System.ComponentModel.ISupportInitialize)jobownerButton).EndInit();
             tabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            playertogglePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)fakeBarTogglePlayer).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -359,12 +378,9 @@
         private Button clearfilterButton;
         private Label bossnameLabel;
         private Label playersLabel;
-        private Panel optionsPanel;
         private CheckBox soloCheckBox;
-        private Label label3;
-        private Panel playertogglePanel;
         private CheckBox excludeSoloCheckBox;
-        private Panel jobtogglePanel;
+        private SmoothScrollPanel jobtogglePanel;
         private Label jobtoggleLabel;
         private PictureBox jobownerButton;
         private Button DownloadButton;
@@ -373,10 +389,13 @@
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
-        private ImageList imageList1;
         private Button filterCrystal;
         private TextBox ElementAmount;
         private Button filterReport;
         private CheckBox updateCheckBox;
+        private PictureBox pictureBox1;
+        private PictureBox fakeBarToggleJob;
+        private SmoothScrollPanel playertogglePanel;
+        private PictureBox fakeBarTogglePlayer;
     }
 }
