@@ -6,6 +6,12 @@ namespace Boss_Tracker.CS_Services
 {
     public class CustomImageLoader
     {
+        // general
+        public Dictionary<String, String> generalImagesDict = new Dictionary<String, String>
+        {
+            { "generalRightPaneBG", "" }
+        };
+
         // tabPage1 Bosses
         public Dictionary<String, String> tabPage1ImagesDict = new Dictionary<String, String>
         {
@@ -37,6 +43,7 @@ namespace Boss_Tracker.CS_Services
 
                 Dictionary<String, Dictionary<String, String>> combined = new()
                 {
+                    { "General", generalImagesDict},
                     { "TabPage1", tabPage1ImagesDict },
                     { "TabPage2", tabPage2ImagesDict }
                 };
@@ -56,6 +63,7 @@ namespace Boss_Tracker.CS_Services
                 {
                     // ternary conditional operators. Shorthand if statement
                     // ? for boolean check on ContainsKey, if it does exist set to found TabPage key. If not, set to new()
+                    generalImagesDict = combined.ContainsKey("General") ? combined["General"] : new Dictionary<String, String>();
                     tabPage1ImagesDict = combined.ContainsKey("TabPage1") ? combined["TabPage1"] : new Dictionary<String, String>();
                     tabPage2ImagesDict = combined.ContainsKey("TabPage2") ? combined["TabPage2"] : new Dictionary<String, String>();
                 }
@@ -76,6 +84,22 @@ namespace Boss_Tracker.CS_Services
             }
 
             // if all cases are false, return empty
+            return "";
+        }
+
+        public String GetGeneralImages(string key)
+        {
+            if (generalImagesDict.ContainsKey(key))
+            {
+                if (!String.IsNullOrEmpty(generalImagesDict[key]))
+                {
+                    if (File.Exists(generalImagesDict[key]))
+                    {
+                        return generalImagesDict[key];
+                    }
+                }
+            }
+
             return "";
         }
     }

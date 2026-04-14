@@ -162,7 +162,15 @@
             foreach (string[] line in lines)
             {
                 // 0 is the boss name (with difficulty at the beginning) and 3 is the price
-                bossCrystalPricesDict.Add(line[0], long.Parse(line[3]));
+                if (!String.IsNullOrEmpty(line[3]))
+                {
+                    bossCrystalPricesDict.Add(line[0], long.Parse(line[3]));
+                }
+                else
+                {
+                    bossCrystalPricesDict.Add(line[0], 0);
+                }
+
             }
 
             return bossCrystalPricesDict;

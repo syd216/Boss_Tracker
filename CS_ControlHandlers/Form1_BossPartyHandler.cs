@@ -365,14 +365,33 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Font = fontStyle
             };
 
+            // set bg images of the panel elements if they exist
+            tabPage1PanelBossCleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossCleared");
+            tabPage1PanelBossUncleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossUncleared");
+            tabPage1PanelButtonClear = _customImageLoader.GetTabPage1Images("tabPage1PanelButtonClear");
+            tabPage1PanelButtonUnclear = _customImageLoader.GetTabPage1Images("tabPage1PanelButtonUnclear");
+
+            // set default states of the panel. also checking if custom images are available
             if (cleared == "Y")
-            {
+            { 
                 clearButton.Text = "Unclear";
                 panel.BackColor = Color.LightGreen;
+
+                if (!String.IsNullOrEmpty(tabPage1PanelBossCleared))
+                { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossCleared); }
+
+                if (!String.IsNullOrEmpty(tabPage1PanelButtonUnclear))
+                { clearButton.Image = Image.FromFile(tabPage1PanelButtonUnclear); clearButton.Text = ""; }
             }
             else
             {
                 clearButton.Text = "Clear";
+
+                if (!String.IsNullOrEmpty(tabPage1PanelBossUncleared))
+                { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossUncleared); }
+
+                if (!String.IsNullOrEmpty(tabPage1PanelButtonClear))
+                { clearButton.Image = Image.FromFile(tabPage1PanelButtonClear); clearButton.Text = ""; }
             }
 
             clearButton.Tag = "Clear";
@@ -394,19 +413,6 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             // add the modified context helper to the tag for future retrieval by the sorter
             panel.Tag = bpc;
-
-            // finally, set bg images of the panel elements if they exist
-            tabPage1PanelBossCleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossCleared");
-            tabPage1PanelBossUncleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossUncleared");
-            tabPage1PanelButtonClear = _customImageLoader.GetTabPage1Images("tabPage1PanelButtonClear");
-            tabPage1PanelButtonUnclear = _customImageLoader.GetTabPage1Images("tabPage1PanelButtonUnclear");
-
-            // set defualt images if possible
-            if (!String.IsNullOrEmpty(tabPage1PanelBossUncleared))
-            { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossUncleared); }
-
-            if (!String.IsNullOrEmpty(tabPage1PanelButtonClear))
-            { clearButton.Image = Image.FromFile(tabPage1PanelButtonClear); clearButton.Text = ""; }
 
             return panel;
         }

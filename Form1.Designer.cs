@@ -49,14 +49,14 @@
             tabControl1 = new TabControl();
             tabPage1 = new TabPage();
             tabPage2 = new TabPage();
-            pictureBox1 = new PictureBox();
+            rightPanePB = new PictureBox();
             playertogglePanel = new SmoothScrollPanel();
             fakeBarTogglePlayer = new PictureBox();
             jobtogglePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fakeBarToggleJob).BeginInit();
             ((System.ComponentModel.ISupportInitialize)jobownerButton).BeginInit();
             tabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)rightPanePB).BeginInit();
             playertogglePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)fakeBarTogglePlayer).BeginInit();
             SuspendLayout();
@@ -66,7 +66,7 @@
             filterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterButton.BackColor = SystemColors.ControlLightLight;
             filterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            filterButton.Location = new Point(1010, 31);
+            filterButton.Location = new Point(1004, 32);
             filterButton.Name = "filterButton";
             filterButton.Size = new Size(75, 23);
             filterButton.TabIndex = 1;
@@ -78,7 +78,7 @@
             // 
             clearfilterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             clearfilterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            clearfilterButton.Location = new Point(1010, 456);
+            clearfilterButton.Location = new Point(1004, 456);
             clearfilterButton.Name = "clearfilterButton";
             clearfilterButton.Size = new Size(75, 23);
             clearfilterButton.TabIndex = 3;
@@ -92,7 +92,7 @@
             bossnameLabel.AutoSize = true;
             bossnameLabel.BackColor = Color.White;
             bossnameLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            bossnameLabel.Location = new Point(788, 35);
+            bossnameLabel.Location = new Point(788, 36);
             bossnameLabel.Name = "bossnameLabel";
             bossnameLabel.Size = new Size(63, 14);
             bossnameLabel.TabIndex = 5;
@@ -248,6 +248,7 @@
             // jobownerButton
             // 
             jobownerButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            jobownerButton.BackColor = SystemColors.Window;
             jobownerButton.BorderStyle = BorderStyle.FixedSingle;
             jobownerButton.Image = Properties.Resources.Gear;
             jobownerButton.Location = new Point(830, 193);
@@ -264,7 +265,7 @@
             // 
             filterbossComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterbossComboBox.FormattingEnabled = true;
-            filterbossComboBox.Location = new Point(858, 31);
+            filterbossComboBox.Location = new Point(859, 32);
             filterbossComboBox.Name = "filterbossComboBox";
             filterbossComboBox.Size = new Size(139, 23);
             filterbossComboBox.TabIndex = 15;
@@ -301,15 +302,15 @@
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Boss Crystals";
             // 
-            // pictureBox1
+            // rightPanePB
             // 
-            pictureBox1.BackgroundImage = Properties.Resources.RightPane;
-            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox1.Location = new Point(776, 21);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(318, 541);
-            pictureBox1.TabIndex = 19;
-            pictureBox1.TabStop = false;
+            rightPanePB.BackgroundImage = Properties.Resources.RightPane;
+            rightPanePB.BackgroundImageLayout = ImageLayout.Stretch;
+            rightPanePB.Location = new Point(776, 21);
+            rightPanePB.Name = "rightPanePB";
+            rightPanePB.Size = new Size(318, 541);
+            rightPanePB.TabIndex = 19;
+            rightPanePB.TabStop = false;
             // 
             // playertogglePanel
             // 
@@ -356,7 +357,7 @@
             Controls.Add(playersLabel);
             Controls.Add(filterButton);
             Controls.Add(bossnameLabel);
-            Controls.Add(pictureBox1);
+            Controls.Add(rightPanePB);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximumSize = new Size(1117, 2160);
             MinimumSize = new Size(1117, 605);
@@ -366,7 +367,7 @@
             ((System.ComponentModel.ISupportInitialize)fakeBarToggleJob).EndInit();
             ((System.ComponentModel.ISupportInitialize)jobownerButton).EndInit();
             tabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)rightPanePB).EndInit();
             playertogglePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)fakeBarTogglePlayer).EndInit();
             ResumeLayout(false);
@@ -393,7 +394,7 @@
         private TextBox ElementAmount;
         private Button filterReport;
         private CheckBox updateCheckBox;
-        private PictureBox pictureBox1;
+        private PictureBox rightPanePB;
         private PictureBox fakeBarToggleJob;
         private SmoothScrollPanel playertogglePanel;
         private PictureBox fakeBarTogglePlayer;

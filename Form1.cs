@@ -50,12 +50,12 @@ namespace Boss_Tracker
         {
             InitializeComponent();
 
-            // initialize check boxes if settings exists
+            // initialize check boxes if "settings" file exists
             if (File.Exists("settings"))
             {
                 string settings = File.ReadAllText("settings");
 
-                Console.WriteLine(settings);
+                //Console.WriteLine(settings);
 
                 CheckBox[] checkBoxes = { soloCheckBox, excludeSoloCheckBox, excludeClearsCheckBox, updateCheckBox };
 
@@ -70,12 +70,19 @@ namespace Boss_Tracker
             _customImageLoader.LoadImagePathFromJSON();
 
             // some custom images are loaded here if available
-            String tp1_bg = _customImageLoader.GetTabPage1Images("tabPage1BG");
+            String tabPage1BG = _customImageLoader.GetTabPage1Images("tabPage1BG");
+            String generalRightPaneBG = _customImageLoader.GetGeneralImages("generalRightPaneBG");
 
-            if (!String.IsNullOrEmpty(tp1_bg)) 
+            if (!String.IsNullOrEmpty(tabPage1BG)) 
             { 
-                tabPage1.BackgroundImage = Image.FromFile(tp1_bg);
+                tabPage1.BackgroundImage = Image.FromFile(tabPage1BG);
                 tabPage1.BackColor = Color.Transparent;
+            }
+
+            if (!String.IsNullOrEmpty(generalRightPaneBG))
+            {
+                Console.WriteLine("YUP");
+                rightPanePB.BackgroundImage = Image.FromFile(generalRightPaneBG);
             }
 
             // check for update AFTER settings are loaded
@@ -101,19 +108,11 @@ namespace Boss_Tracker
                 ElementAmountLabel = ElementAmount
             };
 
-            // holds form builders
+            // form builders
             _bossPartyFactory = new BossPartyFactory(_appServices, _uiState_BossPanel, flowPanelBossParties);
             _bossCrystalFactory = new BossCrystalFactory(_appServices, _uiState_BossCrystal, flowPanelBossCrystals);
 
             FirstLoad();
-
-            // reposition jobtogglePanel after playertogglePanel has finished populating
-            /* jobtogglePanel.Location = new Point(
-                playertogglePanel.Location.X,
-                playertogglePanel.Location.Y + playertogglePanel.Height + 13);
-
-            jobtoggleLabel.Location = new Point(jobtoggleLabel.Location.X, jobtogglePanel.Location.Y);
-            jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);*/
 
             // add relevant flow panels to each tab page
             tabControl1.TabPages[0].Controls.Add(flowPanelBossParties);
@@ -203,9 +202,16 @@ namespace Boss_Tracker
         // set variables and send off paramters to BossPanel_FilterHandler.cs
         private void BossPanel_SubmitFilter(string mode)
         {
+            // SUSPEND THE DRAWING. HUGE SPEEDUP !!!!!!!!
+            flowPanelBossParties.SuspendLayout();
+
             _uiFilterOptions.Mode = mode;
             _uiFilterOptions.FilterBossTextBoxText = filterbossComboBox.Text;
             _appServices.bp_filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _bossPanel_FS);
+
+            flowPanelBossParties.ResumeLayout(true);
+            flowPanelBossParties.PerformLayout(); // forces layout logic across flowpanel controls (scrollbar recalc)
+            flowPanelBossParties.Refresh();
         }
 
         // group is the default filter mode. Checkboxes will be handled in other conditionals
@@ -271,12 +277,14 @@ namespace Boss_Tracker
         {
             string BTTPath = _configDict["bossTradeTrackerPath"];
             string CharactersPath = _configDict["charactersPath"];
+            string BossesPath = _configDict["bossesPath"];
 
             if (File.Exists(BTTPath)) { File.Delete(BTTPath); }
             if (File.Exists(CharactersPath)) { File.Delete(CharactersPath); }
 
             await _appServices.csvDownloader.Download(BTTPath, "BossTradeTracker.csv");
             await _appServices.csvDownloader.Download(CharactersPath, "Characters.csv");
+            await _appServices.csvDownloader.Download(BossesPath, "Bosses.csv");
 
             MessageBox.Show("Program will re-open after closing this message box");
             Process.Start(Environment.ProcessPath!);
