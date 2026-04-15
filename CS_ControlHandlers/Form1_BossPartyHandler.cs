@@ -1,7 +1,9 @@
 ﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_Services;
 using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
+using System.Runtime.CompilerServices;
 
 namespace Boss_Tracker.CS_ControlHandlers
 {
@@ -9,12 +11,14 @@ namespace Boss_Tracker.CS_ControlHandlers
     {
         private readonly BossPanel_FilterState _filterState;
         private readonly SaveToFile _saveToFile;
+        private readonly CustomImageLoader _customImageLoader;
         private readonly string _filePathBTT = "";
 
-        public Form1_BossPartyHandler(BossPanel_FilterState filterState, string filePathBTT) 
+        public Form1_BossPartyHandler(BossPanel_FilterState filterState, CustomImageLoader customImageLoader, string filePathBTT) 
         {
             _filterState = filterState;
             _saveToFile = new SaveToFile(); 
+            _customImageLoader = customImageLoader;
             _filePathBTT = filePathBTT;
         }
 
@@ -31,17 +35,23 @@ namespace Boss_Tracker.CS_ControlHandlers
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
         private Font fontStyle = new Font("Segoe UI", 9);
 
+        // bg images
+        String tabPage1PanelBossCleared = "";
+        String tabPage1PanelBossUncleared = "";
+        String tabPage1PanelButtonClear = "";
+        String tabPage1PanelButtonUnclear = "";
+
         // player toggle buttons
         public Button CreatePlayerToggleButton(Panel panel, string player, int offset)
         {
-            int buttonWidth = (int)(panel.Width / 1.25f);
+            int buttonWidth = (int)(panel.Width - 19);
 
             Button playertoggleButton = new Button
             {
                 Text = player,
                 Tag = panel,
                 Width = buttonWidth,
-                Location = new Point((panel.Width - buttonWidth) / 2, offset * 22)
+                Location = new Point(0, offset * 22)
             };
 
             playertoggleButton.MouseDown += playertoggleButton_MouseDown;
@@ -107,14 +117,14 @@ namespace Boss_Tracker.CS_ControlHandlers
         // job toggle buttons
         public Button CreateJobToggleButton(Panel panel, string player, int offset)
         {
-            int buttonWidth = (int)(panel.Width / 1.25f);
+            int buttonWidth = (int)(panel.Width - 19);
 
             Button jobtoggleButton = new Button
             {
                 Text = player,
                 Tag = panel,
                 Width = buttonWidth,
-                Location = new Point((panel.Width - buttonWidth) / 2, offset * 22)
+                Location = new Point(0, offset * 22)
             };
 
             jobtoggleButton.MouseDown += jobtoggleButton_MouseDown;
@@ -355,17 +365,36 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Font = fontStyle
             };
 
+            // set bg images of the panel elements if they exist
+            tabPage1PanelBossCleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossCleared");
+            tabPage1PanelBossUncleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossUncleared");
+            tabPage1PanelButtonClear = _customImageLoader.GetTabPage1Images("tabPage1PanelButtonClear");
+            tabPage1PanelButtonUnclear = _customImageLoader.GetTabPage1Images("tabPage1PanelButtonUnclear");
+
+            // set default states of the panel. also checking if custom images are available
             if (cleared == "Y")
-            {
+            { 
                 clearButton.Text = "Unclear";
                 panel.BackColor = Color.LightGreen;
+
+                if (!String.IsNullOrEmpty(tabPage1PanelBossCleared))
+                { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossCleared); }
+
+                if (!String.IsNullOrEmpty(tabPage1PanelButtonUnclear))
+                { clearButton.Image = Image.FromFile(tabPage1PanelButtonUnclear); clearButton.Text = ""; }
             }
             else
             {
                 clearButton.Text = "Clear";
+
+                if (!String.IsNullOrEmpty(tabPage1PanelBossUncleared))
+                { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossUncleared); }
+
+                if (!String.IsNullOrEmpty(tabPage1PanelButtonClear))
+                { clearButton.Image = Image.FromFile(tabPage1PanelButtonClear); clearButton.Text = ""; }
             }
 
-            clearButton.Tag = panel;
+            clearButton.Tag = "Clear";
             clearButton.Click += clearButton_Click;
 
             panel.Controls.Add(bossPictureBox);
@@ -401,17 +430,31 @@ namespace Boss_Tracker.CS_ControlHandlers
             }
 
             // type pattern check w/ variable declaration 
-            if (btn.Tag is Panel panel) 
+            if (btn.Parent is Panel panel) 
             { 
-                if (btn.Text == "Clear")
+                if ((String)btn.Tag == "Clear")
                 {
                     panel.BackColor = Color.LightGreen;
+                    btn.Tag = "Unclear";
                     btn.Text = "Unclear";
+
+                    if (!String.IsNullOrEmpty(tabPage1PanelBossCleared)) 
+                    { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossCleared); }
+
+                    if (!String.IsNullOrEmpty(tabPage1PanelButtonUnclear))
+                    { btn.Image = Image.FromFile(tabPage1PanelButtonUnclear); btn.Text = ""; }
                 }
                 else
                 {
                     panel.BackColor = panelColor;
+                    btn.Tag = "Clear";
                     btn.Text = "Clear";
+
+                    if (!String.IsNullOrEmpty(tabPage1PanelBossUncleared))
+                    { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossUncleared); }
+
+                    if (!String.IsNullOrEmpty(tabPage1PanelButtonClear))
+                    { btn.Image = Image.FromFile(tabPage1PanelButtonClear); btn.Text = ""; }
                 }
 
                 // get relevant panel controls

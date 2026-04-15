@@ -93,6 +93,16 @@ namespace Boss_Tracker.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ButtonBG1 {
+            get {
+                object obj = ResourceManager.GetObject("ButtonBG1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Damien {
             get {
                 object obj = ResourceManager.GetObject("Damien", resourceCulture);
@@ -106,6 +116,16 @@ namespace Boss_Tracker.Properties {
         internal static System.Drawing.Bitmap Darknell {
             get {
                 object obj = ResourceManager.GetObject("Darknell", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap FakeBar_ {
+            get {
+                object obj = ResourceManager.GetObject("FakeBar.", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -216,6 +236,16 @@ namespace Boss_Tracker.Properties {
         internal static System.Drawing.Bitmap MesoGrey {
             get {
                 object obj = ResourceManager.GetObject("MesoGrey", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RightPane {
+            get {
+                object obj = ResourceManager.GetObject("RightPane", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

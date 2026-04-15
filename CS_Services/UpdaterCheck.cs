@@ -8,7 +8,7 @@ namespace Boss_Tracker.CS_Services
     public class UpdaterCheck
     {
         private static string versionUrl = "https://raw.githubusercontent.com/syd216/Boss_Tracker/master/version.txt";
-        private static string latestzipUrl = "https://github.com/syd216/Boss_Tracker/releases/latest/download/BossTracker.zip";
+        //private static string latestzipUrl = "https://github.com/syd216/Boss_Tracker/releases/latest/download/BossTracker.zip";
 
         public void Check()
         {

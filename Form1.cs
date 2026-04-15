@@ -25,6 +25,7 @@ namespace Boss_Tracker
         private BossPartyFactory _bossPartyFactory;
         private BossCrystalFactory _bossCrystalFactory;
         private BossCrystal_Prices _bossCrystal_Prices;
+        private CustomImageLoader _customImageLoader;
 
         // instead of adding elements directly to the control, a flowpanel is used to avoid resizing issues
         FlowLayoutPanel flowPanelBossParties = new FlowLayoutPanel()
@@ -49,12 +50,12 @@ namespace Boss_Tracker
         {
             InitializeComponent();
 
-            // initialize check boxes if settings exists
+            // initialize check boxes if "settings" file exists
             if (File.Exists("settings"))
             {
                 string settings = File.ReadAllText("settings");
 
-                Console.WriteLine(settings);
+                //Console.WriteLine(settings);
 
                 CheckBox[] checkBoxes = { soloCheckBox, excludeSoloCheckBox, excludeClearsCheckBox, updateCheckBox };
 
@@ -62,6 +63,26 @@ namespace Boss_Tracker
                 {
                     checkBoxes[i].Checked = int.TryParse(settings[i].ToString(), out int value) && value != 0;
                 }
+            }
+
+            // initialize CustomImageLoader.cs
+            _customImageLoader = new CustomImageLoader();
+            _customImageLoader.LoadImagePathFromJSON();
+
+            // some custom images are loaded here if available
+            String tabPage1BG = _customImageLoader.GetTabPage1Images("tabPage1BG");
+            String generalRightPaneBG = _customImageLoader.GetGeneralImages("generalRightPaneBG");
+
+            if (!String.IsNullOrEmpty(tabPage1BG)) 
+            { 
+                tabPage1.BackgroundImage = Image.FromFile(tabPage1BG);
+                tabPage1.BackColor = Color.Transparent;
+            }
+
+            if (!String.IsNullOrEmpty(generalRightPaneBG))
+            {
+                Console.WriteLine("YUP");
+                rightPanePB.BackgroundImage = Image.FromFile(generalRightPaneBG);
             }
 
             // check for update AFTER settings are loaded
@@ -75,7 +96,7 @@ namespace Boss_Tracker
             _uiState_BossPanel = new UIState_BossPanel();
             _bossCrystal_Prices = new BossCrystal_Prices();
             _uiState_BossCrystal = new UIState_BossCrystal();
-            _appServices = new AppServices(filePathBTT, filePathCharacters, filePathBosses, _bossPanel_FS, _bossCrystal_Prices);
+            _appServices = new AppServices(filePathBTT, filePathCharacters, filePathBosses, _customImageLoader, _bossPanel_FS, _bossCrystal_Prices);
 
             _uiFilterOptions = new UIFilterOptions // set default state of filterOptions
             {
@@ -87,19 +108,11 @@ namespace Boss_Tracker
                 ElementAmountLabel = ElementAmount
             };
 
-            // holds form builders
+            // form builders
             _bossPartyFactory = new BossPartyFactory(_appServices, _uiState_BossPanel, flowPanelBossParties);
             _bossCrystalFactory = new BossCrystalFactory(_appServices, _uiState_BossCrystal, flowPanelBossCrystals);
 
             FirstLoad();
-
-            // reposition jobtogglePanel after playertogglePanel has finished populating
-            jobtogglePanel.Location = new Point(
-                playertogglePanel.Location.X,
-                playertogglePanel.Location.Y + playertogglePanel.Height + 13);
-
-            jobtoggleLabel.Location = new Point(jobtoggleLabel.Location.X, jobtogglePanel.Location.Y);
-            jobownerButton.Location = new Point(jobownerButton.Location.X, jobtoggleLabel.Location.Y);
 
             // add relevant flow panels to each tab page
             tabControl1.TabPages[0].Controls.Add(flowPanelBossParties);
@@ -170,15 +183,35 @@ namespace Boss_Tracker
             // add job toggle buttons
             foreach (string job in toggleableJobs) { _bossPartyFactory.AddJobToggle(jobtogglePanel, job, toggleableJobs.IndexOf(job)); }
 
+            // hide fake scroll bar and enable auto scroll if elements exceed 5
+            if (toggleablePlayers.Count > 5)
+            {
+                fakeBarTogglePlayer.Hide();
+                playertogglePanel.AutoScroll = true;
+            }
+
+            if (toggleableJobs.Count > 5)
+            {
+                fakeBarToggleJob.Hide();
+                jobtogglePanel.AutoScroll = true;
+            }
+
             BossPanel_SubmitFilter("group"); // this loads FilterOptions into memory
         }
 
         // set variables and send off paramters to BossPanel_FilterHandler.cs
         private void BossPanel_SubmitFilter(string mode)
         {
+            // SUSPEND THE DRAWING. HUGE SPEEDUP !!!!!!!!
+            flowPanelBossParties.SuspendLayout();
+
             _uiFilterOptions.Mode = mode;
             _uiFilterOptions.FilterBossTextBoxText = filterbossComboBox.Text;
             _appServices.bp_filterHandler.ApplyFilter(_uiState_BossPanel, _uiFilterOptions, _bossPanel_FS);
+
+            flowPanelBossParties.ResumeLayout(true);
+            flowPanelBossParties.PerformLayout(); // forces layout logic across flowpanel controls (scrollbar recalc)
+            flowPanelBossParties.Refresh();
         }
 
         // group is the default filter mode. Checkboxes will be handled in other conditionals
@@ -244,12 +277,14 @@ namespace Boss_Tracker
         {
             string BTTPath = _configDict["bossTradeTrackerPath"];
             string CharactersPath = _configDict["charactersPath"];
+            string BossesPath = _configDict["bossesPath"];
 
             if (File.Exists(BTTPath)) { File.Delete(BTTPath); }
             if (File.Exists(CharactersPath)) { File.Delete(CharactersPath); }
 
             await _appServices.csvDownloader.Download(BTTPath, "BossTradeTracker.csv");
             await _appServices.csvDownloader.Download(CharactersPath, "Characters.csv");
+            await _appServices.csvDownloader.Download(BossesPath, "Bosses.csv");
 
             MessageBox.Show("Program will re-open after closing this message box");
             Process.Start(Environment.ProcessPath!);
@@ -274,7 +309,6 @@ namespace Boss_Tracker
                 bossnameLabel.Hide();
                 filterbossComboBox.Hide();
 
-                optionsPanel.Hide();
             }
             else if (tabControl1.SelectedIndex == 0)
             {
@@ -290,7 +324,6 @@ namespace Boss_Tracker
                 bossnameLabel.Show();
                 filterbossComboBox.Show();
 
-                optionsPanel.Show();
             }
         }
 
@@ -354,7 +387,7 @@ namespace Boss_Tracker
         private void UpdateCheckButton_CheckedChanged(object sender, EventArgs e)
         {
             UpdateSettings(3, updateCheckBox.Checked);
-            MessageBox.Show("Restart Boss Tracker to check for updates", "Notice");
+            if (updateCheckBox.Checked) { MessageBox.Show("Restart Boss Tracker to check for updates", "Notice"); }
         }
     }
 }
