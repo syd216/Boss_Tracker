@@ -375,6 +375,8 @@ namespace Boss_Tracker.CS_ControlHandlers
             if (cleared == "Y")
             { 
                 clearButton.Text = "Unclear";
+                clearButton.Tag = "Unclear";
+                Console.WriteLine((String)clearButton.Tag);
                 panel.BackColor = Color.LightGreen;
 
                 if (!String.IsNullOrEmpty(tabPage1PanelBossCleared))
@@ -386,6 +388,8 @@ namespace Boss_Tracker.CS_ControlHandlers
             else
             {
                 clearButton.Text = "Clear";
+                clearButton.Tag = "Clear";
+                Console.WriteLine((String)clearButton.Tag);
 
                 if (!String.IsNullOrEmpty(tabPage1PanelBossUncleared))
                 { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossUncleared); }
@@ -394,7 +398,6 @@ namespace Boss_Tracker.CS_ControlHandlers
                 { clearButton.Image = Image.FromFile(tabPage1PanelButtonClear); clearButton.Text = ""; }
             }
 
-            clearButton.Tag = "Clear";
             clearButton.Click += clearButton_Click;
 
             panel.Controls.Add(bossPictureBox);

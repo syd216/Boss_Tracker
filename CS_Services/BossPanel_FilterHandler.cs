@@ -33,7 +33,10 @@ namespace Boss_Tracker.CS_Services
                     players_string = bpc.BossPanelPlayers;
                     jobs_string = bpc.BossPanelJobs;
 
-                    if (bpc.ClearButton.Text == "Unclear") { cleared = true; }
+                    if ((String)bpc.ClearButton.Tag == "Unclear") 
+                    {
+                        cleared = true; 
+                    }
                 }
 
                 // trim string array end since there is a " " for every line retrieved from the csv file
