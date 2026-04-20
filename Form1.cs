@@ -220,6 +220,8 @@ namespace Boss_Tracker
 
         private void clearfilterButton_Click(object sender, EventArgs e)
         {
+            flowPanelBossParties.SuspendLayout();
+
             // DEBUG LABEL HERE
             ElementAmount.Text = _uiState_BossPanel.panelList.Count.ToString();
 
@@ -250,6 +252,10 @@ namespace Boss_Tracker
             {
                 foreach (Button btn in _jobOwnerForm.buttons) { btn.BackColor = SystemColors.ControlLightLight; }
             }
+
+            flowPanelBossParties.ResumeLayout(true);
+            flowPanelBossParties.PerformLayout(); // forces layout logic across flowpanel controls (scrollbar recalc)
+            flowPanelBossParties.Refresh();
         }
 
         // jobownerButton Functions
