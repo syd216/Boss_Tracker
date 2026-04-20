@@ -335,11 +335,19 @@ namespace Boss_Tracker
         // set variables and send off paramters to BossCrystal_FilterHandler.cs
         private void BossCrystal_SubmitFilter()
         {
+            flowPanelBossCrystals.SuspendLayout();
+
             _appServices.bc_filterHandler.ApplyFilter(_uiState_BossCrystal, _bossPanel_FS);
+
+            flowPanelBossCrystals.ResumeLayout(true);
+            flowPanelBossCrystals.PerformLayout();
+            flowPanelBossCrystals.Refresh();
         }
 
         private void filterReport_Click(object sender, EventArgs e)
         {
+            flowPanelBossCrystals.SuspendLayout();
+
             if (_appServices.bc_filterHandler.ApplyFilter(_uiState_BossCrystal, _bossPanel_FS) == 0)
             {
                 // pass the main form (Form1) into the JobOwnerForm.cs constructor to access dict
@@ -357,6 +365,10 @@ namespace Boss_Tracker
                 _crystalReportForm.BringToFront();
                 _crystalReportForm.Show();
             }
+
+            flowPanelBossCrystals.ResumeLayout(true);
+            flowPanelBossCrystals.PerformLayout();
+            flowPanelBossCrystals.Refresh();
         }
 
         private void UpdateSettings(int index, bool isChecked)
@@ -387,7 +399,7 @@ namespace Boss_Tracker
         private void UpdateCheckButton_CheckedChanged(object sender, EventArgs e)
         {
             UpdateSettings(3, updateCheckBox.Checked);
-            if (updateCheckBox.Checked) { MessageBox.Show("Restart Boss Tracker to check for updates", "Notice"); }
+            if (updateCheckBox.CheckState == CheckState.Checked) { MessageBox.Show("Restart Boss Tracker to check for updates", "Notice"); }
         }
     }
 }
