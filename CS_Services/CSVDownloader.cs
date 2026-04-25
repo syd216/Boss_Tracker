@@ -4,7 +4,12 @@
     {
         public async Task Download(string url, string fileName)
         {
-            string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            if (!Directory.Exists("Data"))
+            {
+                Directory.CreateDirectory("Data");
+            }
+
+            string outputPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.Combine("Data", fileName));
 
             using HttpClient client = new HttpClient();
 

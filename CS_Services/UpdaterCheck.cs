@@ -30,7 +30,7 @@ namespace Boss_Tracker.CS_Services
                 if (remoteVersion > localVersion)
                 {
                     Console.WriteLine($"version mismatch {localVersion} vs {remoteVersion}");
-                    var _ = Process.Start("BossTrackerUpdater.exe"); // fire and forget
+                    var _ = Process.Start("Updater\\BossTrackerUpdater.exe"); // fire and forget
                     Environment.Exit(0);
                 }
                 else

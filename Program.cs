@@ -9,9 +9,9 @@ namespace Boss_Tracker
         static readonly CSVDownloader _csvDownloader = new CSVDownloader();
 
         // names for the files
-        static readonly string bossTradeTrackerName = "BossTradeTracker.csv";
-        static readonly string charactersName = "Characters.csv";
-        static readonly string bossesName = "Bosses.csv";
+        static readonly string bossTradeTrackerName = "Data\\BossTradeTracker.csv";
+        static readonly string charactersName = "Data\\Characters.csv";
+        static readonly string bossesName = "Data\\Bosses.csv";
         static readonly string configName = "config.json";
 
         // key value names
