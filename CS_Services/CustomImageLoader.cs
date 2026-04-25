@@ -85,6 +85,22 @@ namespace Boss_Tracker.CS_Services
             return "";
         }
 
+        public String GetTabPage2Images(string key)
+        {
+            if (tabPage2ImagesDict.ContainsKey(key))
+            {
+                if (!String.IsNullOrEmpty(tabPage2ImagesDict[key]))
+                {
+                    if (File.Exists(tabPage2ImagesDict[key]))
+                    {
+                        return tabPage2ImagesDict[key];
+                    }
+                }
+            }
+
+            return "";
+        }
+
         public String GetGeneralImages(string key)
         {
             if (generalImagesDict.ContainsKey(key))

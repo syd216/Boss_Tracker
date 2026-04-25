@@ -1,4 +1,5 @@
 ﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_Services;
 using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
@@ -10,6 +11,7 @@ namespace Boss_Tracker.CS_ControlHandlers
         // string helper
         private readonly StringUtils _stringUtils = new StringUtils();
         private readonly BossCrystal_Prices _bossCrystal_Prices;
+        private readonly CustomImageLoader _customImageLoader;
 
         // colors
         Color panelColor = Color.FromArgb(224, 224, 224); // gray
@@ -19,9 +21,13 @@ namespace Boss_Tracker.CS_ControlHandlers
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
         private Font fontStyle = new Font("Segoe UI", 9);
 
-        public Form1_BossCrystalHandler(BossCrystal_Prices BC_P)
+        // bg images
+        String tabPage2PanelBG = "";
+
+        public Form1_BossCrystalHandler(BossCrystal_Prices BC_P, CustomImageLoader customImageLoader)
         {
             _bossCrystal_Prices = BC_P;
+            _customImageLoader = customImageLoader;
         }
 
         // boss panels
@@ -35,6 +41,10 @@ namespace Boss_Tracker.CS_ControlHandlers
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5)
             };
+
+            tabPage2PanelBG = _customImageLoader.GetTabPage2Images("tabPage2PanelBossDefault");
+
+            if (!String.IsNullOrEmpty(tabPage2PanelBG)) { panel.BackgroundImage = Image.FromFile(tabPage2PanelBG); }
 
             string boss = bossName;
             string difficulty = "";
