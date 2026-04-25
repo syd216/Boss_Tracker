@@ -193,7 +193,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 {
                     Name = "visualPlayerLabel",
                     Text = players,
-                    Width = bossLabel.Width,
+                    Width = labelWidth,
                     Height = 25,
                     BackColor = labelColor,
                     TextAlign = ContentAlignment.MiddleCenter,
@@ -207,7 +207,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 {
                     Name = "visualJobLabel",
                     Text = jobs,
-                    Width = bossLabel.Width,
+                    Width = labelWidth,
                     Height = 25,
                     BackColor = labelColor,
                     TextAlign = ContentAlignment.MiddleCenter,
