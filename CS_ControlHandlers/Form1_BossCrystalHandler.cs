@@ -13,7 +13,7 @@ namespace Boss_Tracker.CS_ControlHandlers
 
         // colors
         Color panelColor = Color.FromArgb(224, 224, 224); // gray
-        Color labelColor = Color.FromArgb(244, 244, 244); // light-gray
+        Color labelColor = Color.FromArgb(100, 244, 244, 244); // light-gray
 
         // font settings
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -76,7 +76,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Text = $"{boss} ({difficulty}) | {partyType} | [{labelPlayerAmount}]",
                 Width = 300, // set width dependant on if player count over 3
                 Height = 25,
-                TextAlign = ContentAlignment.MiddleLeft,
+                TextAlign = ContentAlignment.MiddleCenter,
                 BackColor = labelColor,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
@@ -135,6 +135,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             mesoPictureBox.Location = new Point(mesoLabel.Left + 1 - mesoPictureBox.Width, mesoLabel.Location.Y);
 
             // FOR LOOPS FOR MAKING THE VISUAL LABELS----------------------------------------------------------------
+            int labelWidth = bossLabel.Width + mesoPictureBox.Width + mesoLabel.Width + mesoPartyPictureBox.Width + mesoPartyLabel.Width;
             for (int i = 0; i < splitPlayers.Length - 1; i++) // need to -1 the length because the tail end is empty data: " "
             {
                 // create purely visual labels based off the player names
@@ -143,21 +144,15 @@ namespace Boss_Tracker.CS_ControlHandlers
                 {
                     Name = $"visualPlayerLabel{i}",
                     Text = splitPlayers[i],
-                    Width = 100,
+                    Width = labelWidth / (splitPlayers.Length - 1),
                     Height = 25,
                     BackColor = labelColor,
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(xOffset + (100 * i), 25),
+                    Location = new Point(xOffset + (labelWidth / (splitPlayers.Length - 1) * i), 25),
                     Font = fontStyle
                 };
-
-                if (splitPlayers.Length - 1 < 3) // less than 3 players
-                {
-                    visualPlayerLabel.Width = bossLabel.Width / 2; ;
-                    visualPlayerLabel.Location = new Point(xOffset + (bossLabel.Width / 2 * i), 25);
-                }
 
                 panel.Controls.Add(visualPlayerLabel);
             }
@@ -168,21 +163,15 @@ namespace Boss_Tracker.CS_ControlHandlers
                 {
                     Name = $"visualJobLabel{i}",
                     Text = splitJobs[i],
-                    Width = 100,
+                    Width = labelWidth / (splitPlayers.Length - 1),
                     Height = 25,
                     BackColor = labelColor,
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(xOffset + (100 * i), 50),
+                    Location = new Point(xOffset + (labelWidth / (splitPlayers.Length - 1) * i), 50),
                     Font = fontStyle
                 };
-
-                if (splitPlayers.Length - 1 < 3) // less than 3 players
-                {
-                    visualJobsLabel.Width = bossLabel.Width / 2;
-                    visualJobsLabel.Location = new Point(xOffset + (bossLabel.Width / 2 * i), 50);
-                }
 
                 panel.Controls.Add(visualJobsLabel);
             }
