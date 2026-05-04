@@ -78,7 +78,7 @@
             // 
             clearfilterButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             clearfilterButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            clearfilterButton.Location = new Point(1004, 456);
+            clearfilterButton.Location = new Point(987, 536);
             clearfilterButton.Name = "clearfilterButton";
             clearfilterButton.Size = new Size(75, 23);
             clearfilterButton.TabIndex = 3;
@@ -92,7 +92,7 @@
             bossnameLabel.AutoSize = true;
             bossnameLabel.BackColor = Color.White;
             bossnameLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            bossnameLabel.Location = new Point(788, 36);
+            bossnameLabel.Location = new Point(786, 36);
             bossnameLabel.Name = "bossnameLabel";
             bossnameLabel.Size = new Size(63, 14);
             bossnameLabel.TabIndex = 5;
@@ -104,7 +104,7 @@
             playersLabel.AutoSize = true;
             playersLabel.BackColor = Color.White;
             playersLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            playersLabel.Location = new Point(788, 71);
+            playersLabel.Location = new Point(786, 71);
             playersLabel.Name = "playersLabel";
             playersLabel.Size = new Size(43, 14);
             playersLabel.TabIndex = 6;
@@ -113,7 +113,7 @@
             // filterCrystal
             // 
             filterCrystal.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            filterCrystal.Location = new Point(788, 497);
+            filterCrystal.Location = new Point(1003, 26);
             filterCrystal.Name = "filterCrystal";
             filterCrystal.Size = new Size(75, 35);
             filterCrystal.TabIndex = 17;
@@ -125,7 +125,7 @@
             // filterReport
             // 
             filterReport.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            filterReport.Location = new Point(788, 456);
+            filterReport.Location = new Point(923, 26);
             filterReport.Name = "filterReport";
             filterReport.Size = new Size(75, 35);
             filterReport.TabIndex = 18;
@@ -141,7 +141,7 @@
             updateCheckBox.Checked = true;
             updateCheckBox.CheckState = CheckState.Checked;
             updateCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            updateCheckBox.Location = new Point(788, 391);
+            updateCheckBox.Location = new Point(788, 478);
             updateCheckBox.Name = "updateCheckBox";
             updateCheckBox.Size = new Size(116, 18);
             updateCheckBox.TabIndex = 17;
@@ -155,7 +155,7 @@
             ElementAmount.BackColor = SystemColors.Window;
             ElementAmount.BorderStyle = BorderStyle.None;
             ElementAmount.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            ElementAmount.Location = new Point(1069, 542);
+            ElementAmount.Location = new Point(1066, 540);
             ElementAmount.Name = "ElementAmount";
             ElementAmount.ReadOnly = true;
             ElementAmount.Size = new Size(21, 16);
@@ -168,7 +168,7 @@
             excludeClearsCheckBox.AutoSize = true;
             excludeClearsCheckBox.BackColor = SystemColors.Window;
             excludeClearsCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            excludeClearsCheckBox.Location = new Point(788, 367);
+            excludeClearsCheckBox.Location = new Point(788, 454);
             excludeClearsCheckBox.Name = "excludeClearsCheckBox";
             excludeClearsCheckBox.Size = new Size(97, 18);
             excludeClearsCheckBox.TabIndex = 15;
@@ -181,7 +181,7 @@
             excludeSoloCheckBox.AutoSize = true;
             excludeSoloCheckBox.BackColor = SystemColors.Window;
             excludeSoloCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            excludeSoloCheckBox.Location = new Point(788, 343);
+            excludeSoloCheckBox.Location = new Point(788, 430);
             excludeSoloCheckBox.Name = "excludeSoloCheckBox";
             excludeSoloCheckBox.Size = new Size(88, 18);
             excludeSoloCheckBox.TabIndex = 3;
@@ -194,7 +194,7 @@
             soloCheckBox.AutoSize = true;
             soloCheckBox.BackColor = SystemColors.Window;
             soloCheckBox.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            soloCheckBox.Location = new Point(788, 319);
+            soloCheckBox.Location = new Point(788, 406);
             soloCheckBox.Name = "soloCheckBox";
             soloCheckBox.Size = new Size(103, 18);
             soloCheckBox.TabIndex = 1;
@@ -205,7 +205,7 @@
             // DownloadButton
             // 
             DownloadButton.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            DownloadButton.Location = new Point(858, 422);
+            DownloadButton.Location = new Point(866, 505);
             DownloadButton.Name = "DownloadButton";
             DownloadButton.Size = new Size(139, 23);
             DownloadButton.TabIndex = 15;
@@ -239,7 +239,7 @@
             jobtoggleLabel.AutoSize = true;
             jobtoggleLabel.BackColor = Color.White;
             jobtoggleLabel.Font = new Font("Calibri", 9F, FontStyle.Bold);
-            jobtoggleLabel.Location = new Point(788, 196);
+            jobtoggleLabel.Location = new Point(786, 193);
             jobtoggleLabel.Name = "jobtoggleLabel";
             jobtoggleLabel.Size = new Size(28, 14);
             jobtoggleLabel.TabIndex = 12;
@@ -251,7 +251,7 @@
             jobownerButton.BackColor = SystemColors.Window;
             jobownerButton.BorderStyle = BorderStyle.FixedSingle;
             jobownerButton.Image = Properties.Resources.Gear;
-            jobownerButton.Location = new Point(830, 193);
+            jobownerButton.Location = new Point(820, 193);
             jobownerButton.Name = "jobownerButton";
             jobownerButton.Size = new Size(21, 21);
             jobownerButton.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -265,7 +265,7 @@
             // 
             filterbossComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             filterbossComboBox.FormattingEnabled = true;
-            filterbossComboBox.Location = new Point(859, 32);
+            filterbossComboBox.Location = new Point(858, 32);
             filterbossComboBox.Name = "filterbossComboBox";
             filterbossComboBox.Size = new Size(139, 23);
             filterbossComboBox.TabIndex = 15;
@@ -278,7 +278,7 @@
             tabControl1.Location = new Point(1, -2);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(771, 566);
+            tabControl1.Size = new Size(771, 570);
             tabControl1.TabIndex = 16;
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             // 
@@ -288,7 +288,7 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(763, 538);
+            tabPage1.Size = new Size(763, 542);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Boss Parties";
             // 
@@ -298,7 +298,7 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(763, 538);
+            tabPage2.Size = new Size(763, 542);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Boss Crystals";
             // 
@@ -340,8 +340,8 @@
             BackColor = SystemColors.ControlLight;
             ClientSize = new Size(1101, 566);
             Controls.Add(filterCrystal);
-            Controls.Add(jobtogglePanel);
             Controls.Add(filterReport);
+            Controls.Add(jobtogglePanel);
             Controls.Add(playertogglePanel);
             Controls.Add(clearfilterButton);
             Controls.Add(ElementAmount);
