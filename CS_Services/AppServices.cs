@@ -17,7 +17,7 @@ namespace Boss_Tracker.CS_Services
         {
             csvLoader = new CSVLoader(bttPath, charPath, fpbPath);
             form1_BossPartiesHandler = new Form1_BossPartyHandler(BP_FS, CIL, bttPath);
-            form1_BossCrystalsHandler = new Form1_BossCrystalHandler(BC_P);
+            form1_BossCrystalsHandler = new Form1_BossCrystalHandler(BC_P, CIL);
         }
     }
 }

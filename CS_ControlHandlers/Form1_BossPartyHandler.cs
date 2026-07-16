@@ -29,7 +29,7 @@ namespace Boss_Tracker.CS_ControlHandlers
 
         // panel colors
         Color panelColor = Color.FromArgb(224, 224, 224); // gray
-        Color labelColor = Color.FromArgb(244, 244, 244); // light-gray
+        Color labelColor = Color.FromArgb(200, 244, 244, 244); // light-gray
 
         // font settings
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
@@ -198,23 +198,11 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Margin = new Padding(5)
             };
 
-            string boss = bossName;
-            string difficulty = "";
-            string[] keywords = { "Easy", "Normal", "Hard", "Chaos", "Extreme" };
-
-            string? foundKeyword = keywords.FirstOrDefault(k => boss.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
-
             // split the string of players & jobs that is retrieved from the CSV
             string[] splitPlayers = players.Split(" ");
             string[] splitJobs = jobs.Split(" ");
 
-            if (foundKeyword != null)
-            {
-                // substring, trim, and retrieve boss difficulty from original csv data
-                string trimmed = boss.Substring(foundKeyword.Length).Trim();
-                boss = trimmed;
-                difficulty = foundKeyword;
-            }
+            Console.WriteLine(bossName.Split(" ")[0]);
 
             PictureBox bossPictureBox = new PictureBox
             {
@@ -222,8 +210,18 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Height = panel.Height,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
-                BackgroundImage = Resources.ResourceManager.GetObject(boss) as Image,
+                BackgroundImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "BossImages", bossName.Split(" (")[0]) + ".png"), //Get boss name, have to omit difficulty from end of the passed parameter
                 BackgroundImageLayout = ImageLayout.Stretch,
+            };
+
+            Button clearButton = new Button
+            {
+                Name = "clearButton",
+                Width = panel.Height,
+                Height = panel.Height,
+                BackColor = Color.White,
+                Location = new Point(panel.Width - panel.Height, panel.Top),
+                Font = fontStyle
             };
 
             int xOffset = bossPictureBox.Width + 1;
@@ -235,9 +233,9 @@ namespace Boss_Tracker.CS_ControlHandlers
             Label bossLabel = new Label
             {
                 Name = "bossLabel",
-                Text = $"{boss} ({difficulty}) | {partyType} | [{labelPlayerAmount}]",
+                Text = $"{bossName} | {partyType} | [{labelPlayerAmount}]",
                 Width = 300, // set width dependant on if player count over 3
-                Height = 25, 
+                Height = 25,
                 TextAlign = ContentAlignment.MiddleLeft,
                 BackColor = labelColor,
                 BorderStyle = BorderStyle.FixedSingle,
@@ -277,8 +275,8 @@ namespace Boss_Tracker.CS_ControlHandlers
                 // create purely visual labels based off the player names
                 // using i, the index, as the offset for the name & how spaced each element should be
                 Label visualPlayerLabel = new Label
-                { 
-                    Name = $"visualPlayerLabel{i}", 
+                {
+                    Name = $"visualPlayerLabel{i}",
                     Text = splitPlayers[i],
                     Width = 100,
                     Height = 25,
@@ -286,7 +284,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                     TextAlign = ContentAlignment.MiddleCenter,
                     BorderStyle = BorderStyle.FixedSingle,
                     Margin = new Padding(5),
-                    Location = new Point(xOffset + (100 * i), 25), 
+                    Location = new Point(xOffset + (100 * i), 25),
                 };
 
                 if (splitPlayers.Length - 1 < 3) // less than 3 players
@@ -295,9 +293,9 @@ namespace Boss_Tracker.CS_ControlHandlers
                     visualPlayerLabel.Location = new Point(xOffset + (bossLabel.Width / 2 * i), 25);
                 }
 
-                panel.Controls.Add(visualPlayerLabel); 
+                panel.Controls.Add(visualPlayerLabel);
             }
-            
+
             for (int i = 0; i < splitJobs.Length - 1; i++)
             {
                 Label visualJobsLabel = new Label
@@ -355,16 +353,6 @@ namespace Boss_Tracker.CS_ControlHandlers
                 panel.Controls.Add(visualJobsLabel);
             }
 
-            Button clearButton = new Button
-            {
-                Name = "clearButton",
-                Width = 65,
-                Height = 65,
-                BackColor = Color.White,
-                Location = new Point(panel.Width - 67, panel.Top),
-                Font = fontStyle
-            };
-
             // set bg images of the panel elements if they exist
             tabPage1PanelBossCleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossCleared");
             tabPage1PanelBossUncleared = _customImageLoader.GetTabPage1Images("tabPage1PanelBossUncleared");
@@ -376,7 +364,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             { 
                 clearButton.Text = "Unclear";
                 clearButton.Tag = "Unclear";
-                Console.WriteLine((String)clearButton.Tag);
+                //Console.WriteLine((String)clearButton.Tag);
                 panel.BackColor = Color.LightGreen;
 
                 if (!String.IsNullOrEmpty(tabPage1PanelBossCleared))
@@ -389,7 +377,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             {
                 clearButton.Text = "Clear";
                 clearButton.Tag = "Clear";
-                Console.WriteLine((String)clearButton.Tag);
+                //Console.WriteLine((String)clearButton.Tag);
 
                 if (!String.IsNullOrEmpty(tabPage1PanelBossUncleared))
                 { panel.BackgroundImage = Image.FromFile(tabPage1PanelBossUncleared); }
@@ -397,7 +385,6 @@ namespace Boss_Tracker.CS_ControlHandlers
                 if (!String.IsNullOrEmpty(tabPage1PanelButtonClear))
                 { clearButton.Image = Image.FromFile(tabPage1PanelButtonClear); clearButton.Text = ""; }
             }
-
             clearButton.Click += clearButton_Click;
 
             panel.Controls.Add(bossPictureBox);
@@ -408,7 +395,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             // add players related to the current panel and add to a helper class to contain them
             BossPanelContext bpc = new BossPanelContext
             {
-                BossName = boss,
+                BossName = bossName,
                 BossPanelPlayers = players,
                 BossPanelJobs = jobs,
                 ClearButton = clearButton

@@ -1,4 +1,5 @@
 ﻿using Boss_Tracker.CS_Contexts;
+using Boss_Tracker.CS_Services;
 using Boss_Tracker.CS_States;
 using Boss_Tracker.CS_Utility;
 using Boss_Tracker.Properties;
@@ -10,18 +11,23 @@ namespace Boss_Tracker.CS_ControlHandlers
         // string helper
         private readonly StringUtils _stringUtils = new StringUtils();
         private readonly BossCrystal_Prices _bossCrystal_Prices;
+        private readonly CustomImageLoader _customImageLoader;
 
         // colors
         Color panelColor = Color.FromArgb(224, 224, 224); // gray
-        Color labelColor = Color.FromArgb(244, 244, 244); // light-gray
+        Color labelColor = Color.FromArgb(200, 244, 244, 244); // light-gray
 
         // font settings
         private Font fontStyleBold = new Font("Segoe UI", 9, FontStyle.Bold);
         private Font fontStyle = new Font("Segoe UI", 9);
 
-        public Form1_BossCrystalHandler(BossCrystal_Prices BC_P)
+        // bg images
+        String tabPage2PanelBG = "";
+
+        public Form1_BossCrystalHandler(BossCrystal_Prices BC_P, CustomImageLoader customImageLoader)
         {
             _bossCrystal_Prices = BC_P;
+            _customImageLoader = customImageLoader;
         }
 
         // boss panels
@@ -36,23 +42,15 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Margin = new Padding(5)
             };
 
-            string boss = bossName;
-            string difficulty = "";
-            string[] keywords = { "Easy", "Normal", "Hard", "Chaos", "Extreme" };
+            tabPage2PanelBG = _customImageLoader.GetTabPage2Images("tabPage2PanelBossDefault");
 
-            string? foundKeyword = keywords.FirstOrDefault(k => bossName.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0);
+            if (!String.IsNullOrEmpty(tabPage2PanelBG)) { panel.BackgroundImage = Image.FromFile(tabPage2PanelBG); }
 
             // split the string of players & jobs that is retrieved from the CSV
             string[] splitPlayers = players.Split(" ");
             string[] splitJobs = jobs.Split(" ");
 
-            if (foundKeyword != null)
-            {
-                // substring, trim, and retrieve boss difficulty from original csv data
-                string trimmed = boss.Substring(foundKeyword.Length).Trim();
-                boss = trimmed;
-                difficulty = foundKeyword;
-            }
+            Console.WriteLine(bossName.Split(" ")[0]);
 
             PictureBox bossPictureBox = new PictureBox
             {
@@ -60,7 +58,7 @@ namespace Boss_Tracker.CS_ControlHandlers
                 Height = panel.Height,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(5),
-                BackgroundImage = Resources.ResourceManager.GetObject(boss) as Image,
+                BackgroundImage = Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "BossImages", bossName.Split(" (")[0]) + ".png"), //Get boss name, have to omit difficulty from end of the passed parameter
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
 
@@ -73,7 +71,7 @@ namespace Boss_Tracker.CS_ControlHandlers
             Label bossLabel = new Label
             {
                 Name = "bossLabel",
-                Text = $"{boss} ({difficulty}) | {partyType} | [{labelPlayerAmount}]",
+                Text = $"{bossName} | {partyType} | [{labelPlayerAmount}]",
                 Width = 300, // set width dependant on if player count over 3
                 Height = 25,
                 TextAlign = ContentAlignment.MiddleLeft,
@@ -247,7 +245,7 @@ namespace Boss_Tracker.CS_ControlHandlers
 
             BossCrystalContext bcc = new BossCrystalContext
             {
-                BossName = boss,
+                BossName = bossName.Split(" (")[0],
                 BossPanelPlayerJobPairs = playerjobPairs,
                 Meso = mesoAmounts[1], // only need to pass final meso amount here
             };

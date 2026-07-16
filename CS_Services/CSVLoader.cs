@@ -83,8 +83,10 @@
             // get each line and find unique bosses
             foreach (string boss in bosses)
             {
-                if (!cleanedBosses.Contains(boss.Split(' ')[1])) { cleanedBosses.Add(boss.Split(' ')[1]); }
+                if (!cleanedBosses.Contains(boss.Split(" (")[0])) { cleanedBosses.Add(boss.Split(" (")[0]); }
             }
+
+            cleanedBosses.Sort();
 
             return cleanedBosses;
         }
