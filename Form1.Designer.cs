@@ -218,9 +218,9 @@
             jobtogglePanel.BackColor = SystemColors.Window;
             jobtogglePanel.BorderStyle = BorderStyle.FixedSingle;
             jobtogglePanel.Controls.Add(fakeBarToggleJob);
-            jobtogglePanel.Location = new Point(858, 187);
+            jobtogglePanel.Location = new Point(858, 186);
             jobtogglePanel.Name = "jobtogglePanel";
-            jobtogglePanel.Size = new Size(221, 108);
+            jobtogglePanel.Size = new Size(221, 111);
             jobtogglePanel.TabIndex = 13;
             // 
             // fakeBarToggleJob
@@ -316,11 +316,12 @@
             // 
             playertogglePanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             playertogglePanel.BackColor = SystemColors.Window;
+            playertogglePanel.BackgroundImageLayout = ImageLayout.Center;
             playertogglePanel.BorderStyle = BorderStyle.FixedSingle;
             playertogglePanel.Controls.Add(fakeBarTogglePlayer);
-            playertogglePanel.Location = new Point(858, 71);
+            playertogglePanel.Location = new Point(858, 69);
             playertogglePanel.Name = "playertogglePanel";
-            playertogglePanel.Size = new Size(221, 108);
+            playertogglePanel.Size = new Size(221, 111);
             playertogglePanel.TabIndex = 11;
             // 
             // fakeBarTogglePlayer
